@@ -5,5 +5,6 @@ import WidgetKit
 struct XPriceWatchWidgets: WidgetBundle {
     var body: some Widget {
         XPriceQuoteWidget()
+        XPriceCornerIconWidget()
     }
 }

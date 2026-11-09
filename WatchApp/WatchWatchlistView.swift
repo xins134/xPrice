@@ -7,89 +7,94 @@ private final class WatchNavigationState: ObservableObject {
     @Published var showsSettings = false
 }
 
+private enum WatchHomeStyle {
+    static let background = Color.black
+    static let card = Color(white: 0.10)
+    static let border = Color.white.opacity(0.08)
+    static let secondary = Color(white: 0.72)
+    // Match the existing dark quote palette on the Watch's black card surface.
+    static let quoteRed = Color(red: 1, green: 0.482353, blue: 0.537255)
+    static let quoteGreen = Color(red: 0.337255, green: 0.850980, blue: 0.627451)
+    static let spacing: CGFloat = 8
+    static let cornerRadius: CGFloat = 14
+    static let refreshButtonSize: CGFloat = 32
+    static let refreshHitAreaSize: CGFloat = 44
+    static let columns = [
+        GridItem(.flexible(minimum: 0), spacing: spacing, alignment: .top),
+        GridItem(.flexible(minimum: 0), spacing: spacing, alignment: .top)
+    ]
+}
+
 struct WatchWatchlistView: View {
     @EnvironmentObject private var store: AppStore
     @StateObject private var navigation = WatchNavigationState()
+    @ScaledMetric(relativeTo: .headline) private var quoteCardHeight: CGFloat = 92
 
     var body: some View {
-        let referenceDay = quoteReferenceDay
         NavigationStack(path: $navigation.navigationPath) {
-            List {
-                TimelineView(.periodic(from: .now, by: 60)) { context in
-                    let session = TradingSchedule.session(at: context.date, additionalClosedDates: store.settings.additionalClosedDates)
-                    Text("\(session.displayName) · 选择\(store.settings.marketDataSource.displayName)")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-                if store.watchlist.isEmpty {
-                    VStack(spacing: 12) {
-                        Image(systemName: "star")
-                            .font(.title2)
-                            .foregroundStyle(.secondary)
-                            .accessibilityHidden(true)
-                        Text("还没有自选")
-                            .font(.headline)
-                        Text("在 iPhone 的 xPrice 中添加股票，列表会同步到这里。")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                } else {
-                    Section {
-                        ForEach(store.watchlist) { instrument in
-                            NavigationLink(value: instrument.symbol) {
-                                let quote = store.quote(for: instrument)
-                                WatchQuoteRow(
-                                    instrument: instrument,
-                                    quote: quote,
-                                    status: QuoteStatus.evaluate(
-                                        quote: quote, selectedSource: store.settings.marketDataSource,
-                                        session: store.tradingSession,
-                                        requestFailed: store.quoteFailures.contains(instrument.symbol)
-                                    ),
-                                    colorConvention: store.settings.colorConvention,
-                                    isWidgetInstrument: store.settings.widgetSymbol == instrument.symbol,
-                                    referenceDay: referenceDay
-                                )
-                                .equatable()
-                            }
-                            .listRowInsets(.vertical, 4)
-                        }
-                    } header: {
-                        HStack {
-                            Text("自选 \(store.watchlist.count)")
-                            Spacer()
-                            Text("\(store.settings.watchRefreshSeconds) 秒")
-                        }
-                    } footer: {
-                        WatchRefreshStatus()
-                    }
-                }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    header
 
-                if let error = store.errorMessage {
-                    Section {
+                    if store.watchlist.isEmpty {
+                        emptyState
+                    } else {
+                        LazyVGrid(columns: WatchHomeStyle.columns, spacing: WatchHomeStyle.spacing) {
+                            ForEach(store.watchlist) { instrument in
+                                NavigationLink(value: instrument.symbol) {
+                                    let quote = store.quote(for: instrument)
+                                    WatchQuoteCard(
+                                        instrument: instrument,
+                                        quote: quote,
+                                        status: QuoteStatus.evaluate(
+                                            quote: quote, selectedSource: store.settings.marketDataSource,
+                                            session: store.tradingSession,
+                                            requestFailed: store.quoteFailures.contains(instrument.symbol)
+                                        ),
+                                        colorConvention: store.settings.colorConvention,
+                                        isWidgetInstrument: store.settings.widgetSymbol == instrument.symbol,
+                                        height: quoteCardHeight
+                                    )
+                                    .equatable()
+                                }
+                                .buttonStyle(WatchHomeButtonStyle())
+                                .accessibilityIdentifier("watch.quote.\(instrument.symbol)")
+                            }
+                        }
+
+                        WatchRefreshStatus()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+
+                    if let error = store.errorMessage {
                         Label(error, systemImage: "wifi.exclamationmark")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(WatchHomeStyle.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(12)
+                            .background(WatchHomeStyle.card, in: RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius))
                     }
-                }
 
-                Button {
-                    Task { await store.refresh() }
-                } label: {
-                    Label(store.isRefreshing ? "正在刷新" : "刷新行情", systemImage: "arrow.clockwise")
+                    Button {
+                        navigation.showsSettings = true
+                    } label: {
+                        actionLabel("设置", systemImage: "gearshape")
+                    }
+                    .buttonStyle(WatchHomeButtonStyle())
+                    .foregroundStyle(store.settings.buttonTheme.color)
+                    .accessibilityIdentifier("watch.settings")
                 }
-                .tint(store.settings.buttonTheme.color)
-                .disabled(store.isRefreshing || store.watchlist.isEmpty)
-
-                Button("设置", systemImage: "gearshape") {
-                    navigation.showsSettings = true
-                }
-                .tint(store.settings.buttonTheme.color)
+                .padding(.horizontal, 0)
+                .padding(.top, 4)
+                .padding(.bottom, WatchHomeStyle.refreshHitAreaSize + 24)
             }
-            .environment(\.defaultMinListRowHeight, 44)
+            .contentMargins(.horizontal, 0, for: .scrollContent)
+            .background(WatchHomeStyle.background)
+            .overlay(alignment: .bottomTrailing) {
+                floatingRefreshButton
+                    .padding(WatchHomeStyle.spacing)
+            }
+            .ignoresSafeArea(.container, edges: [.horizontal, .bottom])
             .toolbarVisibility(.hidden, for: .navigationBar)
             .sheet(isPresented: $navigation.showsSettings) {
                 WatchSettingsView()
@@ -107,78 +112,182 @@ struct WatchWatchlistView: View {
                 }
             }
             .onOpenURL { url in
-                guard url.scheme == "xprice", url.host == "quote",
-                      let symbol = url.pathComponents.dropFirst().first,
-                      !symbol.isEmpty else { return }
-                navigation.navigationPath = [symbol]
+                guard url.scheme == "xprice" else { return }
+                switch url.host {
+                case "watchlist":
+                    navigation.navigationPath = []
+                    navigation.showsSettings = false
+                case "quote":
+                    guard let symbol = url.pathComponents.dropFirst().first,
+                          !symbol.isEmpty else { return }
+                    navigation.navigationPath = [symbol]
+                default:
+                    break
+                }
+            }
+        }
+        .environment(\.colorScheme, .dark)
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text("自选")
+                    .font(.headline.weight(.regular))
+                Text("\(store.watchlist.count)")
+                    .font(.caption.weight(.regular))
+                    .monospacedDigit()
+                    .foregroundStyle(WatchHomeStyle.secondary)
+                Spacer(minLength: 4)
+                Text("\(store.settings.watchRefreshSeconds) 秒")
+                    .font(.caption2)
+                    .monospacedDigit()
+                    .foregroundStyle(WatchHomeStyle.secondary)
+            }
+            TimelineView(.periodic(from: .now, by: 60)) { context in
+                let session = TradingSchedule.session(at: context.date, additionalClosedDates: store.settings.additionalClosedDates)
+                Text("\(session.displayName) · 选择\(store.settings.marketDataSource.displayName)")
+                    .font(.caption2)
+                    .foregroundStyle(WatchHomeStyle.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
 
-    private var quoteReferenceDay: Date {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "Asia/Shanghai")!
-        return calendar.startOfDay(for: .now)
+    private var emptyState: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "star")
+                .font(.title2)
+                .foregroundStyle(store.settings.buttonTheme.color)
+                .accessibilityHidden(true)
+            Text("还没有自选")
+                .font(.headline.weight(.regular))
+            Text("在 iPhone 的 xPrice 中添加股票，自选会同步到这里。")
+                .font(.footnote)
+                .foregroundStyle(WatchHomeStyle.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(16)
+        .background(WatchHomeStyle.card, in: RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius))
+    }
+
+    private func actionLabel(_ title: String, systemImage: String) -> some View {
+        Label(title, systemImage: systemImage)
+            .font(.caption.weight(.regular))
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .background(store.settings.buttonTheme.color.opacity(0.14), in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var floatingRefreshButton: some View {
+        Button {
+            Task { await store.refresh() }
+        } label: {
+            ZStack {
+                if store.isRefreshing {
+                    ProgressView()
+                        .controlSize(.small)
+                        .tint(store.settings.buttonTheme.color)
+                } else {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundStyle(store.settings.buttonTheme.color.opacity(0.9))
+                }
+            }
+            .frame(width: WatchHomeStyle.refreshButtonSize, height: WatchHomeStyle.refreshButtonSize)
+            .background(WatchHomeStyle.background.opacity(0.45), in: Circle())
+            .overlay {
+                Circle()
+                    .strokeBorder(store.settings.buttonTheme.color.opacity(0.3), lineWidth: 1)
+            }
+            .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
+            .frame(width: WatchHomeStyle.refreshHitAreaSize, height: WatchHomeStyle.refreshHitAreaSize)
+            .contentShape(Circle())
+        }
+        .buttonStyle(WatchHomeButtonStyle())
+        .disabled(store.isRefreshing || store.watchlist.isEmpty)
+        .accessibilityLabel(store.isRefreshing ? "正在刷新" : "刷新行情")
+        .accessibilityIdentifier("watch.refresh")
     }
 }
 
-private struct WatchQuoteRow: View, Equatable {
+private struct WatchHomeButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(isEnabled ? (configuration.isPressed ? 0.70 : 1) : 0.45)
+    }
+}
+
+private struct WatchQuoteCard: View, Equatable {
     let instrument: Instrument
     let quote: Quote?
     let status: QuoteStatus
     let colorConvention: PriceColorConvention
     let isWidgetInstrument: Bool
-    let referenceDay: Date
+    let height: CGFloat
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(instrument.name)
-                    .font(.subheadline.weight(.semibold))
-                    .lineLimit(1)
-                Spacer(minLength: 4)
-                if isWidgetInstrument {
-                    Image(systemName: "clock")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .accessibilityLabel("表盘显示")
-                }
-            }
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(quote.map { QuoteFormatting.price($0.price, kind: instrument.kind) } ?? "—")
-                    .font(.system(.headline, design: .rounded, weight: .semibold))
-                    .monospacedDigit()
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
-                Spacer(minLength: 2)
-                Text(quote.map { QuoteFormatting.percent($0.changePercent) } ?? "—")
-                    .font(.system(.subheadline, design: .rounded, weight: .medium))
-                    .monospacedDigit()
-                    .foregroundStyle(quote.map {
-                        QuoteColor.color(for: $0.changePercent, convention: colorConvention)
-                    } ?? .secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
-            }
-            HStack(spacing: 4) {
-                Text("\(instrument.code) · \(status.sourceLabel)")
-                Spacer(minLength: 4)
-                Text(quote.map { "源\(QuoteFormatting.compactTime($0.timestamp, relativeTo: referenceDay))" } ?? "未取价")
-            }
-            .font(.caption2)
-            .foregroundStyle(.secondary)
-            .monospacedDigit()
-            .lineLimit(1)
-            .minimumScaleFactor(0.85)
-            if let badge = status.badge {
-                Text(badge)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
+        GeometryReader { geometry in
+            let centerX = geometry.size.width / 2
+            let textWidth = max(0, geometry.size.width - 16)
+            let slotHeight = geometry.size.height / 4
+
+            Text(instrument.name)
+                .font(.caption2.weight(.regular))
+                .lineLimit(1)
+                .minimumScaleFactor(0.35)
+                .frame(width: textWidth, height: slotHeight, alignment: .center)
+                .position(x: centerX, y: geometry.size.height * 0.25)
+
+            Text(quote.map { QuoteFormatting.price($0.price, kind: instrument.kind) } ?? "—")
+                .font(.system(.headline, design: .rounded, weight: .regular))
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.35)
+                .frame(width: textWidth, height: slotHeight, alignment: .center)
+                .position(x: centerX, y: geometry.size.height * 0.50)
+
+            Text(quote.map { QuoteFormatting.percent($0.changePercent) } ?? "—")
+                .font(.system(.caption, design: .rounded, weight: .regular))
+                .monospacedDigit()
+                .foregroundStyle(changeColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.35)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 3)
+                .background(changeColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 6))
+                .frame(width: textWidth, height: slotHeight, alignment: .center)
+                .position(x: centerX, y: geometry.size.height * 0.75)
         }
-        .frame(minHeight: 44, alignment: .leading)
-        .accessibilityElement(children: .combine)
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity)
+        .frame(height: height, alignment: .center)
+        .background(WatchHomeStyle.card, in: RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius))
+        .overlay {
+            RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius)
+                .strokeBorder(WatchHomeStyle.border, lineWidth: 1)
+        }
+        .contentShape(RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilitySummary)
         .accessibilityHint(status.message)
+    }
+
+    private var changeColor: Color {
+        guard let quote, quote.changePercent != 0 else { return WatchHomeStyle.secondary }
+        let isRed = (quote.changePercent > 0) == (colorConvention == .redUp)
+        return isRed ? WatchHomeStyle.quoteRed : WatchHomeStyle.quoteGreen
+    }
+
+    private var accessibilitySummary: String {
+        let price = quote.map { QuoteFormatting.price($0.price, kind: instrument.kind) } ?? "暂无价格"
+        let percent = quote.map { QuoteFormatting.percent($0.changePercent) } ?? "暂无涨跌幅"
+        return "\(instrument.name)，价格 \(price)，涨跌幅 \(percent)"
+            + (isWidgetInstrument ? "，表盘显示" : "")
     }
 }
 

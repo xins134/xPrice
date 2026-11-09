@@ -102,7 +102,7 @@ private struct ScreenOffQuoteLayout: View {
                 .simultaneousGesture(TapGesture().onEnded { onDismiss() })
                 .accessibilityElement(children: .ignore)
                 .accessibilityAddTraits(.isButton)
-                .accessibilityLabel("返回首页")
+                .accessibilityLabel(dismissLabel)
                 .accessibilityValue(display.showsQuotes ? accessibleQuotes : "行情已隐藏")
                 .accessibilityAction(.default, onDismiss)
                 .padding(.leading, screenInsets.leading)
@@ -116,10 +116,11 @@ private struct ScreenOffQuoteLayout: View {
         .accessibilityLabel("熄屏行情")
         .accessibilityValue(display.showsQuotes ? "显示行情" : "行情已隐藏")
         .accessibilityAction(named: Text(toggleLabel), toggleQuotes)
-        .accessibilityAction(named: Text("返回首页"), onDismiss)
+        .accessibilityAction(named: Text(dismissLabel), onDismiss)
     }
 
     private var toggleLabel: String { display.showsQuotes ? "隐藏行情" : "显示行情" }
+    private var dismissLabel: String { instrument == nil ? "返回首页" : "返回详情页" }
 
     private var displayedInstruments: [Instrument] {
         instrument.map { [$0] } ?? store.screenOffInstruments

@@ -96,16 +96,11 @@ struct WatchlistView: View {
     }
 
     private func dismissScreenOff() {
-        var transaction = Transaction(animation: nil)
-        transaction.disablesAnimations = true
-        withTransaction(transaction) {
-            ui.path.removeAll()
-        }
         guard ui.showingScreenOff else { return }
         withAnimation(.easeInOut(duration: 0.2), completionCriteria: .removed) {
             ui.showingScreenOff = false
         } completion: {
-            // Keep the homepage inactive until the fading screen is removed.
+            // Keep the underlying page inactive until the fading screen is removed.
             if !ui.showingScreenOff {
                 ui.screenOffBlocksHome = false
                 ui.screenOffInstrument = nil

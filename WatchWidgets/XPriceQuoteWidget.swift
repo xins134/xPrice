@@ -104,7 +104,52 @@ struct XPriceQuoteWidget: Widget {
         }
         .configurationDisplayName("自选行情")
         .description("查看选中股票的最近价格与涨跌幅。点击打开 xPrice；表盘更新由系统安排。")
-        .supportedFamilies([.accessoryCircular, .accessoryRectangular, .accessoryInline])
+        .supportedFamilies([.accessoryCircular, .accessoryRectangular, .accessoryInline, .accessoryCorner])
+    }
+}
+
+private struct CornerIconEntry: TimelineEntry {
+    let date: Date
+}
+
+private struct CornerIconProvider: TimelineProvider {
+    func placeholder(in context: Context) -> CornerIconEntry {
+        CornerIconEntry(date: .now)
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (CornerIconEntry) -> Void) {
+        completion(CornerIconEntry(date: .now))
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<CornerIconEntry>) -> Void) {
+        completion(Timeline(entries: [CornerIconEntry(date: .now)], policy: .never))
+    }
+}
+
+private struct CornerIconWidgetView: View {
+    var body: some View {
+        Image(systemName: "chart.xyaxis.line")
+            .font(.system(size: 22, weight: .regular))
+            .symbolRenderingMode(.monochrome)
+            .widgetAccentable()
+            .accessibilityLabel("打开 xPrice 首页")
+    }
+}
+
+struct XPriceCornerIconWidget: Widget {
+    let kind = "XPriceCornerIconWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: CornerIconProvider()) { _ in
+            CornerIconWidgetView()
+                .containerBackground(for: .widget) { Color.clear }
+                .widgetURL(URL(string: "xprice://watchlist"))
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("打开 xPrice 首页")
+        }
+        .configurationDisplayName("xPrice 首页")
+        .description("仅显示行情图标，点击打开 xPrice 首页。")
+        .supportedFamilies([.accessoryCorner])
     }
 }
 
@@ -123,6 +168,8 @@ private struct QuoteWidgetView: View {
                 if let instrument = entry.instrument, let quote = entry.quote {
                     let text = formattedText(instrument, quote, status: status, now: context.date)
                     switch family {
+                    case .accessoryCorner:
+                        corner(instrument, quote, text: text)
                     case .accessoryCircular:
                         circular(instrument, quote, text: text)
                     case .accessoryInline:
@@ -137,6 +184,22 @@ private struct QuoteWidgetView: View {
             }
             .accessibilityElement(children: .combine)
         }
+    }
+
+    private func corner(_ instrument: Instrument, _ quote: Quote, text: QuoteWidgetText) -> some View {
+        Text(text.percent)
+            .font(.system(.body, design: .rounded, weight: .regular))
+            .monospacedDigit()
+            .foregroundStyle(QuoteColor.color(for: quote.changePercent, convention: entry.colorConvention))
+            .widgetAccentable()
+            .lineLimit(1)
+            .minimumScaleFactor(0.5)
+            .widgetLabel {
+                Text("\(instrument.name) \(text.price)\(text.badge.map { " · " + $0 } ?? "")")
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+            }
+            .accessibilityLabel(text.accessibilityLabel)
     }
 
     private func circular(_ instrument: Instrument, _ quote: Quote, text: QuoteWidgetText) -> some View {
@@ -197,6 +260,16 @@ private struct QuoteWidgetView: View {
     @ViewBuilder
     private func emptyState(status: QuoteStatus) -> some View {
         switch family {
+        case .accessoryCorner:
+            Image(systemName: entry.instrument == nil ? "star" : "minus")
+                .font(.system(size: 20, weight: .regular))
+                .widgetAccentable()
+                .widgetLabel {
+                    Text(entry.instrument.map { "\($0.name) \(status.badge ?? "未取价")" } ?? "在 xPrice 添加自选")
+                }
+                .accessibilityLabel(entry.instrument.map {
+                    "\($0.name)，\(status.marketLabel)，\(status.message)"
+                } ?? "暂无自选，请在 iPhone 添加并打开手表 xPrice 完成同步")
         case .accessoryInline:
             Text(entry.instrument.map { "\($0.name) \(status.badge ?? "未取价")" } ?? "xPrice · 在 iPhone 添加自选")
         case .accessoryCircular:
@@ -244,3 +317,29 @@ private struct QuoteWidgetText {
     let badge: String?
     let accessibilityLabel: String
 }
+
+#if DEBUG
+#Preview("角落行情与空状态", as: .accessoryCorner) {
+    XPriceQuoteWidget()
+} timeline: {
+    let now = Date.now
+    let instrument = Instrument(symbol: "sh600519", name: "贵州茅台")
+    QuoteEntry(
+        date: now, instrument: instrument,
+        quote: Quote(
+            symbol: instrument.symbol, name: instrument.name,
+            price: Decimal(string: "1468.88")!, previousClose: Decimal(string: "1487.62")!,
+            changePercent: Decimal(string: "-1.26")!, timestamp: now, fetchedAt: now, source: .tencent
+        ),
+        colorConvention: .redUp, refreshFailed: false, selectedSource: .tencent, additionalClosedDates: []
+    )
+    QuoteEntry(
+        date: now.addingTimeInterval(60), instrument: instrument, quote: nil,
+        colorConvention: .redUp, refreshFailed: true, selectedSource: .tencent, additionalClosedDates: []
+    )
+    QuoteEntry(
+        date: now.addingTimeInterval(120), instrument: nil, quote: nil,
+        colorConvention: .redUp, refreshFailed: false, selectedSource: .tencent, additionalClosedDates: []
+    )
+}
+#endif
