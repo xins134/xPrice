@@ -1,0 +1,10 @@
+// Change these identifiers to your own unique identifiers before device signing.
+XPRICE_IOS_BUNDLE_ID = com.xins.xprice
+XPRICE_WATCH_BUNDLE_ID = $(XPRICE_IOS_BUNDLE_ID).watchkitapp
+XPRICE_WIDGET_BUNDLE_ID = $(XPRICE_WATCH_BUNDLE_ID).widgets
+XPRICE_APP_GROUP = group.com.example.xprice.shared
+APP_GROUP_IDENTIFIER = $(XPRICE_APP_GROUP)
+
+// Enter your Apple Developer team ID, or select the same team on all targets.
+DEVELOPMENT_TEAM =
+CODE_SIGN_STYLE = Automatic
