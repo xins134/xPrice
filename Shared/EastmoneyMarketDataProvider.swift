@@ -5,7 +5,8 @@ import FoundationNetworking
 
 /// Adapter for Eastmoney's public website endpoints, which have no API SLA.
 /// `fltt=2` requests decimal prices and percentage points: an ETF price of
-/// 3.851 is already 3.851, and must not be divided by 100 or rounded to cents.
+/// 3.851 or convertible-bond price of 113.052 is already in yuan, and must
+/// not be divided by 100 or rounded to cents.
 public struct EastmoneyMarketDataProvider: MarketDataProviding {
     private let session: URLSession
     private static let maximumResponseBytes = 2_000_000

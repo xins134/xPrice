@@ -3,6 +3,7 @@ import Foundation
 public enum InstrumentKind: String, Codable, CaseIterable, Sendable {
     case stock
     case index
+    case convertibleBond
     case etf
     case lof
     /// An exchange-traded fund whose more specific category is not known.
@@ -12,6 +13,7 @@ public enum InstrumentKind: String, Codable, CaseIterable, Sendable {
         switch self {
         case .stock: "股票"
         case .index: "指数"
+        case .convertibleBond: "可转债"
         case .etf: "ETF"
         case .lof: "LOF"
         case .fund: "基金"
@@ -113,7 +115,7 @@ public enum MarketDataError: Error, LocalizedError, Equatable, Sendable {
     public var errorDescription: String? {
         switch self {
         case .invalidSymbol(let symbol):
-            "不支持的证券代码：\(symbol)。请使用 A 股、指数、ETF 或 LOF 的完整代码。"
+            "不支持的证券代码：\(symbol)。请使用 A 股、指数、ETF、LOF 或可转债的完整代码。"
         case .invalidQuery:
             "请输入证券名称或完整的 6 位证券代码。"
         case .invalidResponse:

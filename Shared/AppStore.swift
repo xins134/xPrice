@@ -18,6 +18,7 @@ final class AppStore: ObservableObject {
     @Published private(set) var confirmedWatchlistCount: Int?
     @Published private(set) var quoteFailures: Set<String> = []
     @Published private(set) var tradingSession = TradingSchedule.session(at: .now)
+    @Published private var screenOffSelection = ScreenOffSelection(watchlist: [])
 
     private let platform: Platform
     private let injectedProvider: (any MarketDataProviding)?
@@ -26,6 +27,7 @@ final class AppStore: ObservableObject {
     private var settingsUpdatedAt: Date
     private var settingsVersions: SettingsVersions
     private var isActive = false
+    private var isScreenOffRefreshPaused = false
     private var failureCount = 0
     private var loopTask: Task<Void, Never>?
     private let refreshCoordinator = QuoteRefreshCoordinator()
@@ -44,6 +46,9 @@ final class AppStore: ObservableObject {
     var widgetInstrument: Instrument? {
         watchlist.first { $0.symbol == settings.widgetSymbol } ?? watchlist.first
     }
+    var screenOffInstruments: [Instrument] { screenOffSelection.instruments(in: watchlist) }
+
+    private var canRefresh: Bool { isActive && !isScreenOffRefreshPaused }
 
     private var quoteInstruments: [Instrument] {
         var seen = Set<String>()
@@ -61,6 +66,10 @@ final class AppStore: ObservableObject {
         watchlistUpdatedAt = cached?.watchlistUpdatedAt ?? .distantPast
         settingsUpdatedAt = cached?.settingsUpdatedAt ?? .distantPast
         settingsVersions = cached?.settingsVersions ?? SettingsVersions()
+        if platform == .phone {
+            screenOffSelection = ScreenOffSelection.load(from: .standard, watchlist: watchlist)
+            screenOffSelection.save(to: .standard)
+        }
         tradingSession = TradingSchedule.session(at: .now, additionalClosedDates: settings.additionalClosedDates)
         if let data = UserDefaults.standard.data(forKey: "xprice.lastSyncConfirmation.v1"),
            let confirmation = try? JSONDecoder().decode(SyncConfirmation.self, from: data) {
@@ -86,6 +95,41 @@ final class AppStore: ObservableObject {
     deinit { loopTask?.cancel() }
 
     func quote(for instrument: Instrument) -> Quote? { quotes[instrument.symbol] }
+
+    func isScreenOffSelected(_ instrument: Instrument) -> Bool {
+        platform == .phone && screenOffSelection.contains(instrument)
+    }
+
+    @discardableResult
+    func setScreenOffSelected(_ selected: Bool, for instrument: Instrument) -> Bool {
+        guard platform == .phone else { return false }
+        var updated = screenOffSelection
+        guard updated.setSelected(selected, for: instrument, watchlist: watchlist) else { return false }
+        if updated != screenOffSelection { screenOffSelection = updated }
+        updated.save(to: .standard)
+        return true
+    }
+
+    private func reconcileScreenOffSelection() {
+        guard platform == .phone else { return }
+        var updated = screenOffSelection
+        updated.reconcile(with: watchlist)
+        guard updated != screenOffSelection else { return }
+        screenOffSelection = updated
+        updated.save(to: .standard)
+    }
+
+    func setScreenOffRefreshPaused(_ paused: Bool) {
+        guard platform == .phone, paused != isScreenOffRefreshPaused else { return }
+        isScreenOffRefreshPaused = paused
+        if paused {
+            loopTask?.cancel()
+            loopTask = nil
+            cancelRefresh()
+        } else if isActive {
+            restartLoop()
+        }
+    }
 
     func setActive(_ active: Bool) {
         guard active != isActive else { return }
@@ -121,6 +165,7 @@ final class AppStore: ObservableObject {
         guard platform == .phone, !watchlist.contains(where: { $0.symbol == instrument.symbol }) else { return false }
         guard watchlist.count < 50 else { errorMessage = "首版最多添加 50 只自选"; return false }
         watchlist.append(instrument)
+        reconcileScreenOffSelection()
         watchlistUpdatedAt = nextEditDate()
         if settings.widgetSymbol == nil {
             settings.widgetSymbol = instrument.symbol
@@ -135,6 +180,7 @@ final class AppStore: ObservableObject {
     func remove(_ instrument: Instrument) {
         guard platform == .phone else { return }
         watchlist.removeAll { $0.symbol == instrument.symbol }
+        reconcileScreenOffSelection()
         if !overviewInstruments.contains(where: { $0.symbol == instrument.symbol }) {
             quotes.removeValue(forKey: instrument.symbol)
         }
@@ -193,6 +239,7 @@ final class AppStore: ObservableObject {
         let adjusted = destination - offsets.filter { $0 < destination }.count
         for index in offsets.sorted(by: >) { watchlist.remove(at: index) }
         watchlist.insert(contentsOf: moving, at: max(0, min(adjusted, watchlist.count)))
+        reconcileScreenOffSelection()
         watchlistUpdatedAt = nextEditDate()
         persist(sync: true)
     }
@@ -226,7 +273,7 @@ final class AppStore: ObservableObject {
     }
 
     func refresh() async {
-        guard isActive, !refreshCoordinator.isRefreshing, !quoteInstruments.isEmpty else { return }
+        guard canRefresh, !refreshCoordinator.isRefreshing, !quoteInstruments.isEmpty else { return }
         isRefreshing = true
         let instruments = quoteInstruments
         let provider = provider
@@ -235,7 +282,7 @@ final class AppStore: ObservableObject {
         defer { isRefreshing = refreshCoordinator.isRefreshing }
         do {
             guard let fetched = try await refreshCoordinator.fetch(using: provider, instruments: instruments),
-                  isActive, revision == sourceRevision, generation == refreshGeneration else { return }
+                  canRefresh, revision == sourceRevision, generation == refreshGeneration else { return }
             let allowed = Set(quoteInstruments.map(\.symbol))
             var received = Set<String>()
             for quote in fetched where allowed.contains(quote.symbol) {
@@ -257,7 +304,7 @@ final class AppStore: ObservableObject {
             persist()
             if Date().timeIntervalSince(lastWidgetReload) >= 300 { reloadWidgets() }
         } catch {
-            guard isActive, revision == sourceRevision, generation == refreshGeneration,
+            guard canRefresh, revision == sourceRevision, generation == refreshGeneration,
                   !(error is CancellationError), (error as? URLError)?.code != .cancelled else { return }
             quoteFailures.formUnion(instruments.map(\.symbol))
             failureCount += 1
@@ -275,15 +322,16 @@ final class AppStore: ObservableObject {
 
     private func restartLoop() {
         loopTask?.cancel()
+        loopTask = nil
         cancelRefresh()
-        guard isActive else { return }
+        guard canRefresh else { return }
         loopTask = Task { [weak self] in
             while !Task.isCancelled {
-                guard let self, self.isActive else { return }
+                guard let self, self.canRefresh else { return }
                 self.updateTradingSession()
                 let started = Date()
                 await self.refresh()
-                guard !Task.isCancelled, self.isActive else { return }
+                guard !Task.isCancelled, self.canRefresh else { return }
                 self.updateTradingSession()
                 let now = Date()
                 let session = TradingSchedule.session(at: now, additionalClosedDates: self.settings.additionalClosedDates)
@@ -349,6 +397,7 @@ final class AppStore: ObservableObject {
             throw CocoaError(.fileWriteUnknown)
         }
         watchlist = result.watchlist
+        reconcileScreenOffSelection()
         overviewInstruments = result.overviewInstruments
         quotes = result.quotes
         settings = result.settings

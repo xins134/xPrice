@@ -56,7 +56,7 @@ struct StockSearchView: View {
                 instrumentList([])
             case .searching:
                 ProgressView("正在搜索")
-                    .tint(.accentColor)
+                    .tint(store.settings.buttonTheme.color)
             case .failed(let error):
                 ContentUnavailableView {
                     Label("暂时无法搜索", systemImage: "wifi.exclamationmark")
@@ -87,10 +87,10 @@ struct StockSearchView: View {
                       systemImage: "magnifyingglass")
             } description: {
                 Text(destination == .overview
-                     ? "搜索名称或完整代码，添加多个指数或个股，\n在首页行情栏左右滑动查看。"
-                     : "输入名称或完整代码\n支持沪深北 A 股、指数、ETF 和 LOF")
+                     ? "搜索名称或完整代码，添加多个证券，\n在首页行情栏左右滑动查看。"
+                     : "输入名称或完整代码\n支持沪深北 A 股、指数、ETF、LOF 和沪深可转债")
             } actions: {
-                Text("例如：上证指数、000001、510300")
+                Text("例如：上证指数、510300、兴业转债、113052")
                     .font(.footnote.monospacedDigit())
                     .foregroundStyle(.secondary)
             }
@@ -104,7 +104,7 @@ struct StockSearchView: View {
         return List {
             if fromWatchlist {
                 Section {
-                    Text("搜索指数或个股，也可从自选中添加。可连续添加多个，在首页左右滑动查看。")
+                    Text("搜索证券名称或代码，也可从自选中添加。可连续添加多个，在首页左右滑动查看。")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }

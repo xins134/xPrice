@@ -17,6 +17,16 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.navigationLink)
+                    Picker("字体大小", selection: Binding(
+                        get: { store.settings.fontSize },
+                        set: { size in store.updateSettings { $0.fontSize = size } }
+                    )) {
+                        ForEach(AppFontSize.allCases, id: \.self) { size in
+                            Text(size.displayName).tag(size)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
+                    .accessibilityHint("较小为默认字号，选择后立即生效并同步到手表")
 
                     Picker("主题色", selection: Binding(
                         get: { store.settings.buttonTheme },
@@ -37,7 +47,7 @@ struct SettingsView: View {
                 } header: {
                     Text("界面外观")
                 } footer: {
-                    Text("跟随系统会随 iPhone 的外观自动切换。选择立即生效，并保留到下次打开 App。\n主题色仅用于按钮，涨跌颜色单独设置。")
+                    Text("跟随系统会随 iPhone 的外观自动切换。选择立即生效，并保留到下次打开 App。\n字体默认较小，调整后同步到手表。按钮、开关等控件跟随主题色，涨跌颜色单独设置。")
                 }
 
                 Section {
@@ -135,7 +145,7 @@ struct SettingsView: View {
                     Text("免费公开接口可能延迟、中断或改变。1 秒刷新代表请求间隔，不代表每秒都会产生新报价；请以每只证券标注的行情时间为准。\n\n自选与设置保存在本机，并同步到配对手表。查询证券时会连接行情服务；应用无需登录。\n\nxPrice 1.0 · 个人自用")
                 }
             }
-            .tint(.accentColor)
+            .tint(store.settings.buttonTheme.color)
             .navigationTitle("设置")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

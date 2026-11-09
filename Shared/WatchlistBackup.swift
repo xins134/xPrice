@@ -205,7 +205,7 @@ public struct WatchlistBackup: Codable, Sendable {
         let value: AppSettings
         private enum CodingKeys: String, CodingKey {
             case phoneRefreshSeconds, watchRefreshSeconds, colorConvention, widgetSymbol
-            case marketDataSource, phoneAppearance, buttonTheme
+            case marketDataSource, phoneAppearance, buttonTheme, fontSize
             case smartRefreshEnabled, additionalClosedDates
         }
 
@@ -220,6 +220,7 @@ public struct WatchlistBackup: Codable, Sendable {
                 marketDataSource: text(.marketDataSource).flatMap(MarketDataSource.init(rawValue:)) ?? .tencent,
                 phoneAppearance: text(.phoneAppearance).flatMap(AppAppearance.init(rawValue:)) ?? .system,
                 buttonTheme: text(.buttonTheme).flatMap(ButtonTheme.init(rawValue:)) ?? .teal,
+                fontSize: text(.fontSize).flatMap(AppFontSize.init(rawValue:)) ?? .smaller,
                 smartRefreshEnabled: fields.decodeIfPresent(Bool.self, forKey: .smartRefreshEnabled) ?? true,
                 additionalClosedDates: fields.decodeIfPresent([String].self, forKey: .additionalClosedDates) ?? []
             )

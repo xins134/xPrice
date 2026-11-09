@@ -12,6 +12,20 @@ public enum AppAppearance: String, Codable, CaseIterable, Sendable {
     }
 }
 
+public enum AppFontSize: String, Codable, CaseIterable, Sendable {
+    case small, smaller, medium, larger, large
+
+    public var displayName: String {
+        switch self {
+        case .small: "小"
+        case .smaller: "较小"
+        case .medium: "中"
+        case .larger: "较大"
+        case .large: "大"
+        }
+    }
+}
+
 public enum ButtonTheme: String, Codable, CaseIterable, Sendable {
     case teal, blue, purple, orange, pink, graphite
 
@@ -56,13 +70,15 @@ public struct AppSettings: Codable, Equatable, Sendable {
     public var marketDataSource: MarketDataSource
     public var phoneAppearance: AppAppearance
     public var buttonTheme: ButtonTheme
+    public var fontSize: AppFontSize
     public var smartRefreshEnabled: Bool
     public var additionalClosedDates: [String]
 
     public init(phoneRefreshSeconds: Int = 3, watchRefreshSeconds: Int = 5,
                 colorConvention: PriceColorConvention = .redUp, widgetSymbol: String? = nil,
                 marketDataSource: MarketDataSource = .tencent, phoneAppearance: AppAppearance = .system,
-                buttonTheme: ButtonTheme = .teal, smartRefreshEnabled: Bool = true,
+                buttonTheme: ButtonTheme = .teal, fontSize: AppFontSize = .smaller,
+                smartRefreshEnabled: Bool = true,
                 additionalClosedDates: [String] = []) {
         self.phoneRefreshSeconds = phoneRefreshSeconds
         self.watchRefreshSeconds = watchRefreshSeconds
@@ -71,6 +87,7 @@ public struct AppSettings: Codable, Equatable, Sendable {
         self.marketDataSource = marketDataSource
         self.phoneAppearance = phoneAppearance
         self.buttonTheme = buttonTheme
+        self.fontSize = fontSize
         self.smartRefreshEnabled = smartRefreshEnabled
         self.additionalClosedDates = additionalClosedDates
         normalize()
@@ -78,7 +95,7 @@ public struct AppSettings: Codable, Equatable, Sendable {
 
     private enum CodingKeys: String, CodingKey {
         case phoneRefreshSeconds, watchRefreshSeconds, colorConvention, widgetSymbol, marketDataSource, phoneAppearance, buttonTheme
-        case smartRefreshEnabled, additionalClosedDates
+        case fontSize, smartRefreshEnabled, additionalClosedDates
     }
 
     public init(from decoder: Decoder) throws {
@@ -93,6 +110,8 @@ public struct AppSettings: Codable, Equatable, Sendable {
         phoneAppearance = appearance.flatMap(AppAppearance.init(rawValue:)) ?? .system
         let theme = try values.decodeIfPresent(String.self, forKey: .buttonTheme)
         buttonTheme = theme.flatMap(ButtonTheme.init(rawValue:)) ?? .teal
+        let size = try values.decodeIfPresent(String.self, forKey: .fontSize)
+        fontSize = size.flatMap(AppFontSize.init(rawValue:)) ?? .smaller
         smartRefreshEnabled = try values.decodeIfPresent(Bool.self, forKey: .smartRefreshEnabled) ?? true
         additionalClosedDates = try values.decodeIfPresent([String].self, forKey: .additionalClosedDates) ?? []
         normalize()
@@ -114,6 +133,7 @@ public struct SettingsVersions: Codable, Equatable, Sendable {
     public var marketDataSource: Date
     public var phoneAppearance: Date
     public var buttonTheme: Date
+    public var fontSize: Date
     public var smartRefreshEnabled: Date
     public var additionalClosedDates: Date
 
@@ -125,13 +145,14 @@ public struct SettingsVersions: Codable, Equatable, Sendable {
         marketDataSource = date
         phoneAppearance = date
         buttonTheme = date
+        fontSize = date
         smartRefreshEnabled = date
         additionalClosedDates = date
     }
 
     private enum CodingKeys: String, CodingKey {
         case phoneRefreshSeconds, watchRefreshSeconds, colorConvention, widgetSymbol, marketDataSource, phoneAppearance, buttonTheme
-        case smartRefreshEnabled, additionalClosedDates
+        case fontSize, smartRefreshEnabled, additionalClosedDates
     }
 
     public init(from decoder: Decoder) throws {
@@ -143,13 +164,14 @@ public struct SettingsVersions: Codable, Equatable, Sendable {
         marketDataSource = try values.decodeIfPresent(Date.self, forKey: .marketDataSource) ?? .distantPast
         phoneAppearance = try values.decodeIfPresent(Date.self, forKey: .phoneAppearance) ?? .distantPast
         buttonTheme = try values.decodeIfPresent(Date.self, forKey: .buttonTheme) ?? .distantPast
+        fontSize = try values.decodeIfPresent(Date.self, forKey: .fontSize) ?? .distantPast
         smartRefreshEnabled = try values.decodeIfPresent(Date.self, forKey: .smartRefreshEnabled) ?? .distantPast
         additionalClosedDates = try values.decodeIfPresent(Date.self, forKey: .additionalClosedDates) ?? .distantPast
     }
 
     public var latest: Date {
         max(phoneRefreshSeconds, watchRefreshSeconds, colorConvention, widgetSymbol, marketDataSource, phoneAppearance,
-            buttonTheme, smartRefreshEnabled, additionalClosedDates)
+            buttonTheme, fontSize, smartRefreshEnabled, additionalClosedDates)
     }
 
     public mutating func recordChanges(from old: AppSettings, to new: AppSettings, at date: Date) {
@@ -160,6 +182,7 @@ public struct SettingsVersions: Codable, Equatable, Sendable {
         if old.marketDataSource != new.marketDataSource { marketDataSource = date }
         if old.phoneAppearance != new.phoneAppearance { phoneAppearance = date }
         if old.buttonTheme != new.buttonTheme { buttonTheme = date }
+        if old.fontSize != new.fontSize { fontSize = date }
         if old.smartRefreshEnabled != new.smartRefreshEnabled { smartRefreshEnabled = date }
         if old.additionalClosedDates != new.additionalClosedDates { additionalClosedDates = date }
     }
@@ -192,6 +215,10 @@ public struct SettingsVersions: Codable, Equatable, Sendable {
         if versions.buttonTheme > buttonTheme {
             local.buttonTheme = incoming.buttonTheme
             buttonTheme = versions.buttonTheme
+        }
+        if versions.fontSize > fontSize {
+            local.fontSize = incoming.fontSize
+            fontSize = versions.fontSize
         }
         if versions.smartRefreshEnabled > smartRefreshEnabled {
             local.smartRefreshEnabled = incoming.smartRefreshEnabled

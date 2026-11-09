@@ -37,6 +37,40 @@ struct WatchlistBackupTests {
         #expect(restored.overviewInstruments == [fund])
     }
 
+    @Test func convertibleBondsRoundTripAndImportWithTheirWidgetSelection() throws {
+        let shBond = Instrument(symbol: "sh113001", name: "合成沪市转债", kind: .convertibleBond)
+        let szBond = Instrument(symbol: "sz123001", name: "合成深市转债", kind: .convertibleBond)
+        let settings = AppSettings(widgetSymbol: szBond.symbol, marketDataSource: .eastmoney)
+        let backup = WatchlistBackup(watchlist: [shBond, szBond], overviewInstruments: [szBond],
+                                    settings: settings, exportedAt: date)
+        let restored = try WatchlistBackup.decode(backup.encode())
+        #expect(restored.watchlist == [shBond, szBond])
+        #expect(restored.overviewInstruments == [szBond])
+        #expect(restored.settings.widgetSymbol == szBond.symbol)
+
+        let local = CacheSnapshot(watchlist: [stock], quotes: [:], settings: AppSettings())
+        let imported = try restored.apply(to: local, mode: .merge, includeSettings: true, date: date)
+        #expect(imported.watchlist == [stock, shBond, szBond])
+        #expect(imported.overviewInstruments == [szBond])
+        #expect(imported.settings.widgetSymbol == szBond.symbol)
+        #expect(imported.settings.marketDataSource == .eastmoney)
+    }
+
+    @Test func rejectsMisclassifiedConvertibleBondsAndOtherDebtSecurities() throws {
+        let invalid = [
+            Instrument(symbol: "sh113001", name: "合成沪市转债", kind: .stock),
+            Instrument(symbol: "sz123001", name: "合成深市转债", kind: .fund),
+            Instrument(symbol: "sh600519", name: "合成股票", kind: .convertibleBond),
+            Instrument(symbol: "sh019001", name: "合成国债", kind: .convertibleBond),
+            Instrument(symbol: "sh111001", name: "合成交换债", kind: .convertibleBond),
+            Instrument(symbol: "sh132001", name: "合成交换债", kind: .convertibleBond)
+        ]
+        for instrument in invalid {
+            let backup = WatchlistBackup(watchlist: [instrument], settings: AppSettings(), exportedAt: date)
+            #expect(throws: WatchlistBackupError.invalidInstrument(instrument.symbol)) { try backup.encode() }
+        }
+    }
+
     @Test func rejectsOversizeInvalidDocumentsAndFutureVersions() throws {
         #expect(throws: WatchlistBackupError.oversized) {
             try WatchlistBackup.decode(Data(repeating: 0x20, count: WatchlistBackup.maximumBytes + 1))

@@ -36,7 +36,7 @@ public struct CacheSnapshot: Codable, Sendable {
     }
 
     private enum SettingsCodingKeys: String, CodingKey {
-        case marketDataSource, phoneAppearance, buttonTheme, smartRefreshEnabled, additionalClosedDates
+        case marketDataSource, phoneAppearance, buttonTheme, fontSize, smartRefreshEnabled, additionalClosedDates
     }
 
     public init(from decoder: Decoder) throws {
@@ -62,6 +62,10 @@ public struct CacheSnapshot: Codable, Sendable {
         if !settingsValues.contains(.buttonTheme) {
             // Peers without button themes did not choose one; retain the newer device's selection.
             settingsVersions.buttonTheme = .distantPast
+        }
+        if !settingsValues.contains(.fontSize) {
+            // Older peers did not choose a font size; retain the newer device's selection.
+            settingsVersions.fontSize = .distantPast
         }
         if !settingsValues.contains(.smartRefreshEnabled) {
             settingsVersions.smartRefreshEnabled = .distantPast

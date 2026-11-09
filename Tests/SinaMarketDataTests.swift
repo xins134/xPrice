@@ -57,6 +57,55 @@ struct SinaMarketDataTests {
         #expect(try SinaMarketDataProvider.parseQuotes(mixed, requested: requested, fetchedAt: receivedAt).count == 1)
     }
 
+    @Test func convertibleQuotesPreserveThreeDecimalPricesAndCalculatedPercent() throws {
+        let requested = [
+            Instrument(symbol: "sh113052", name: "合成沪转债", kind: .convertibleBond),
+            Instrument(symbol: "sz127045", name: "合成深转债", kind: .convertibleBond)
+        ]
+        let payload = sinaFixture(symbol: "sz127045", name: "合成深转债", price: "120.123", close: "120.000")
+            + sinaFixture(symbol: "sh113052", name: "合成沪转债", price: "113.052", close: "113.051")
+        let quotes = try SinaMarketDataProvider.parseQuotes(payload, requested: requested, fetchedAt: receivedAt)
+        #expect(quotes.map(\.symbol) == requested.map(\.symbol))
+        #expect(quotes[0].price == Decimal(string: "113.052"))
+        #expect(quotes[0].change == Decimal(string: "0.001"))
+        #expect(quotes[1].price == Decimal(string: "120.123"))
+        #expect(quotes[1].changePercent == Decimal(string: "0.1025"))
+        #expect(quotes.allSatisfy { $0.source == .sina && $0.timestamp == receivedAt })
+        #expect(throws: MarketDataError.noValidQuotes) {
+            try SinaMarketDataProvider.parseQuotes(
+                sinaFixture(symbol: "sh113052", name: "合成沪转债", price: "0.000", close: "113.051"),
+                requested: [requested[0]], fetchedAt: receivedAt
+            )
+        }
+    }
+
+    @Test func convertibleCodeSearchConfirmsNamesForBareAndExplicitMarketCodes() async throws {
+        let provider = SinaMarketDataProvider(session: sinaStubSession())
+        for (query, symbol) in [("113052", "sh113052"), ("118003.SH", "sh118003"), ("SZ127045", "sz127045")] {
+            SinaStubURLProtocol.state.install { request in
+                #expect(request.url?.host == "hq.sinajs.cn")
+                #expect(request.url?.path == "/list=\(symbol)")
+                return .response(200, Data(sinaFixture(symbol: symbol, name: "合成转债", price: "113.052", close: "113.051").utf8))
+            }
+            #expect(try await provider.search(query) == [Instrument(symbol: symbol, name: "合成转债", kind: .convertibleBond)])
+            #expect(SinaStubURLProtocol.state.requests.count == 1)
+        }
+    }
+
+    @Test func convertibleNameSearchRequestsBondCategoryAndFiltersOtherDebt() async throws {
+        let payload = #"var suggestvalue="合成沪转债,81,113052,sh113052,合成沪转债,,合成沪转债,99,1,,,,;合成深转债,81,127045,sz127045,合成深转债,,合成深转债,99,1,,,,;合成可交换债,81,111001,sh111001,合成可交换债;合成国债,81,019001,sh019001,合成国债;重复沪转债,81,113052,sh113052,重复沪转债;错码,81,113052,sh113053,错码;错类股票,81,600519,sh600519,错类股票";"#
+        SinaStubURLProtocol.state.install { request in
+            #expect(request.url?.host == "suggest3.sinajs.cn")
+            #expect(request.url?.absoluteString.contains("type=11,12,13,14,15,81&") == true)
+            return .response(200, Data(payload.utf8))
+        }
+        let provider = SinaMarketDataProvider(session: sinaStubSession())
+        #expect(try await provider.search("合成转债") == [
+            Instrument(symbol: "sh113052", name: "合成沪转债", kind: .convertibleBond),
+            Instrument(symbol: "sz127045", name: "合成深转债", kind: .convertibleBond)
+        ])
+    }
+
     @Test func completeCodeSearchConfirmsNamesAndResolvesIndexStockAmbiguity() async throws {
         SinaStubURLProtocol.state.install { request in
             #expect(request.url?.scheme == "https")

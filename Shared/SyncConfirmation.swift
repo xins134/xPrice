@@ -46,6 +46,7 @@ public struct SyncConfirmationTracker {
               versions.marketDataSource >= settingsVersions.marketDataSource,
               versions.phoneAppearance >= settingsVersions.phoneAppearance,
               versions.buttonTheme >= settingsVersions.buttonTheme,
+              versions.fontSize >= settingsVersions.fontSize,
               versions.smartRefreshEnabled >= settingsVersions.smartRefreshEnabled,
               versions.additionalClosedDates >= settingsVersions.additionalClosedDates else { return false }
         confirmation = incoming

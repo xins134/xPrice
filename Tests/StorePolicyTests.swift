@@ -381,6 +381,44 @@ struct StorePolicyTests {
         #expect(restored.settingsVersions == original.settingsVersions)
     }
 
+    @Test func convertibleBondsPreserveKindsAndFractionalPricesAcrossPersistenceSyncAndWidgetCache() throws {
+        try withDefaults { defaults in
+            let shBond = Instrument(symbol: "sh113001", name: "合成沪市转债", kind: .convertibleBond)
+            let szBond = Instrument(symbol: "sz123001", name: "合成深市转债", kind: .convertibleBond)
+            let timestamp = Date(timeIntervalSince1970: 100)
+            let oldQuote = Quote(symbol: szBond.symbol, name: szBond.name,
+                                 price: Decimal(string: "123.456")!, previousClose: Decimal(string: "122.345")!,
+                                 changePercent: Decimal(string: "0.91")!, timestamp: timestamp, fetchedAt: timestamp,
+                                 source: .sina)
+            let snapshot = CacheSnapshot(watchlist: [shBond, szBond], quotes: [szBond.symbol: oldQuote],
+                                         settings: AppSettings(widgetSymbol: szBond.symbol, marketDataSource: .sina),
+                                         overviewInstruments: [szBond])
+            SnapshotStore.save(snapshot, to: defaults)
+            let persisted = try #require(SnapshotStore.load(from: defaults))
+            #expect(persisted.watchlist == [shBond, szBond])
+            #expect(persisted.overviewInstruments == [szBond])
+            #expect(persisted.settings.widgetSymbol == szBond.symbol)
+            #expect(persisted.quotes[szBond.symbol] == oldQuote)
+
+            // WatchConnectivity sends this same Codable snapshot payload.
+            let synced = try JSONDecoder().decode(CacheSnapshot.self, from: JSONEncoder().encode(persisted))
+            #expect(synced.watchlist == persisted.watchlist)
+            #expect(synced.quotes == persisted.quotes)
+            #expect(synced.settings.widgetSymbol == szBond.symbol)
+
+            let updated = Quote(symbol: szBond.symbol, name: szBond.name,
+                                price: Decimal(string: "123.457")!, previousClose: oldQuote.previousClose,
+                                changePercent: oldQuote.changePercent, timestamp: timestamp.addingTimeInterval(1),
+                                fetchedAt: timestamp.addingTimeInterval(2), source: .sina)
+            SnapshotStore.updateQuote(updated, in: defaults)
+            let refreshed = try #require(SnapshotStore.load(from: defaults))
+            #expect(refreshed.quotes[szBond.symbol] == updated)
+            #expect(refreshed.watchlist == [shBond, szBond])
+            #expect(refreshed.overviewInstruments == [szBond])
+            #expect(refreshed.settings.widgetSymbol == szBond.symbol)
+        }
+    }
+
     @Test func overviewPersistsItsOrderAndKeepsSameCodeInDifferentMarkets() throws {
         try withDefaults { defaults in
             let index = Instrument(symbol: "sh000001", name: "上证指数", kind: .index)

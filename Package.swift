@@ -13,9 +13,11 @@ let coreSources = [
     "SnapshotStore.swift",
     "TradingSchedule.swift",
     "QuoteStatus.swift",
+    "QuoteFormatting.swift",
     "QuoteRefreshCoordinator.swift",
     "SyncConfirmation.swift",
     "WatchlistBackup.swift",
+    "ScreenOffSelection.swift",
 ]
 let sharedDirectory = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent().appendingPathComponent("Shared")

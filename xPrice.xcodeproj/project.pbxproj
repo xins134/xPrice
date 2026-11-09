@@ -2,379 +2,1268 @@
 {
 	archiveVersion = 1;
 	classes = {
+
 	};
 	objectVersion = 56;
 	objects = {
-
-/* Begin PBXBuildFile section */
-		01C1808012E8FC86C8AF72C9 /* WatchWidgets/Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5D6F87538314089220C9A7 /* WatchWidgets/Assets.xcassets */; };
-		08F92BEC84C1B47D7154B755 /* Shared/WatchlistBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF43657CA996C0538428A02 /* Shared/WatchlistBackup.swift */; };
-		14BAB4C5FABC261528D1C01E /* Shared/WatchlistBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF43657CA996C0538428A02 /* Shared/WatchlistBackup.swift */; };
-		167894338B6ABC1A6FC4E4FC /* Shared/QuoteFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4044898A5F7161B6E40DDB /* Shared/QuoteFormatting.swift */; };
-		17E185FDB951C915A9C9BCE9 /* Shared/QuoteStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED24791CCA9B90A938821D9 /* Shared/QuoteStatus.swift */; };
-		19C92DB8475FC6F77B69A1B1 /* Shared/SinaMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1033F22FE193DB056638EA /* Shared/SinaMarketDataProvider.swift */; };
-		1B5BED957AC32BFDE52F2B1D /* Shared/TencentMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42B9F38733FB2BBFD2E779 /* Shared/TencentMarketDataProvider.swift */; };
-		28C7B46428B371A1E0881309 /* Shared/EastmoneyMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E68712CB0ADE908BCAED7B /* Shared/EastmoneyMarketDataProvider.swift */; };
-		296B3CBE4D22E990D9064D57 /* iOSApp/ClosedDatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFB250E48BCC9A607CDFC25 /* iOSApp/ClosedDatesView.swift */; };
-		2B37D239F5C1D75A1CE8EE9A /* iOSApp/StockSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8939D21CE859557A9AAFE7 /* iOSApp/StockSearchView.swift */; };
-		2BFB38033C43E70110F03198 /* Shared/ButtonThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844E4B4E72AAF737E1BAAECD /* Shared/ButtonThemeStyle.swift */; };
-		32A364204FFE9E0493F91A3D /* iOSApp/InstrumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2088E9598F41F179D281D796 /* iOSApp/InstrumentDetailView.swift */; };
-		375D381B2166FF27E4EC8081 /* Shared/MarketDataProviders.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D248C74586141746560EBB /* Shared/MarketDataProviders.swift */; };
-		417836BD547D782D1E218AEF /* iOSApp/Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E1BEC2EFB9A3D0033A8D804 /* iOSApp/Assets.xcassets */; };
-		4195483BADEBC6E60E8C3477 /* Shared/AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F87CDB98A34516AF958C5D /* Shared/AppSettings.swift */; };
-		41D42130A517FD2F7407CBAA /* Shared/SyncConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873182DBEEBFF662073C3B0B /* Shared/SyncConfirmation.swift */; };
-		42E206B7B346627068DF7B39 /* Shared/MarketModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFEE7B993683005EF264FCD /* Shared/MarketModels.swift */; };
-		4333A77DFEB4C84A887B17A4 /* WatchApp/XPriceWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BDCAE0032B801EAA5FD719 /* WatchApp/XPriceWatchApp.swift */; };
-		479686B7DA7D406F30AF3479 /* Shared/TencentMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42B9F38733FB2BBFD2E779 /* Shared/TencentMarketDataProvider.swift */; };
-		481F3169B2E8DBDC9633BE79 /* Shared/MarketDataProviders.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D248C74586141746560EBB /* Shared/MarketDataProviders.swift */; };
-		4C01606EC1EB5F834A4FAD76 /* xPriceWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4583B50D86C276EA3C4E3639 /* xPriceWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		525430D14DF377DE9D8E6034 /* iOSApp/WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C53FFDB9F02BE70BCF8610D /* iOSApp/WatchlistView.swift */; };
-		52D59953B47132EF9F86DD58 /* Shared/QuoteFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4044898A5F7161B6E40DDB /* Shared/QuoteFormatting.swift */; };
-		5522D93E4703FB57F245E625 /* Shared/WatchSyncBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9027FFBAD4B33AAD0E07A6F /* Shared/WatchSyncBridge.swift */; };
-		5C5D6FD34F19B7FE0EBB9C57 /* WatchWidgets/XPriceWatchWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09303D7947A892160E975644 /* WatchWidgets/XPriceWatchWidgets.swift */; };
-		60397645135862043E2B250A /* WatchWidgets/XPriceQuoteWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C678557578214E17DFCF37 /* WatchWidgets/XPriceQuoteWidget.swift */; };
-		64CB40C42C27092A52C21FE0 /* Shared/MarketDataProviders.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D248C74586141746560EBB /* Shared/MarketDataProviders.swift */; };
-		67E17B74A7155AA4CCEAFF67 /* Shared/AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E78F87489C63844139F8C97 /* Shared/AppStore.swift */; };
-		6B51DD89A6FD2C6155226BE1 /* Shared/QuoteFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4044898A5F7161B6E40DDB /* Shared/QuoteFormatting.swift */; };
-		6D71FB9103ABF502577A4514 /* Shared/SnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EA919469F1B7973584A150 /* Shared/SnapshotStore.swift */; };
-		70AC80896C83B60B9FB39521 /* iOSApp/WatchlistBackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E89A0345F3BA8C2D20F342 /* iOSApp/WatchlistBackupView.swift */; };
-		760AB9A9DB8C8465AE30BDA8 /* Shared/SyncConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873182DBEEBFF662073C3B0B /* Shared/SyncConfirmation.swift */; };
-		7A99523D3D188AB2C57B9EE6 /* Shared/SinaMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1033F22FE193DB056638EA /* Shared/SinaMarketDataProvider.swift */; };
-		7D74550BFF97919AE04BAF4A /* WatchApp/Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F211D932DA1652D0D313D60 /* WatchApp/Assets.xcassets */; };
-		7F05403EA11E46CD73F2E343 /* iOSApp/XPriceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64B9685CAB0B9A1739C881F /* iOSApp/XPriceApp.swift */; };
-		84E515E09CE80B4D8C19FF24 /* Shared/QuoteStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED24791CCA9B90A938821D9 /* Shared/QuoteStatus.swift */; };
-		8CAA0360DB53A5A3E1883C8E /* Shared/WatchSyncBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9027FFBAD4B33AAD0E07A6F /* Shared/WatchSyncBridge.swift */; };
-		8D4711AC4054F43E5D625078 /* Shared/QuoteRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5D18A08626E45033125609 /* Shared/QuoteRefreshCoordinator.swift */; };
-		8DC812048D217BAC3116747D /* Shared/EastmoneyMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E68712CB0ADE908BCAED7B /* Shared/EastmoneyMarketDataProvider.swift */; };
-		8FCDBDCA842BEE7EE6680D19 /* Shared/AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E78F87489C63844139F8C97 /* Shared/AppStore.swift */; };
-		9532F82BD3AC4F6E6C02CC9D /* WatchApp/WatchSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CCC88D3AF5C62C94B3FBD5 /* WatchApp/WatchSettingsView.swift */; };
-		9F5183649FC91625EED3CCA9 /* Shared/TradingSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B912BB19842417E39EDB5B3 /* Shared/TradingSchedule.swift */; };
-		A175FC9EAB7DD0CB06043DD5 /* Shared/MarketModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFEE7B993683005EF264FCD /* Shared/MarketModels.swift */; };
-		A56D9F47F96555DBD60614D0 /* Shared/QuoteStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED24791CCA9B90A938821D9 /* Shared/QuoteStatus.swift */; };
-		A7705048AAC7DB41D3B7035F /* Shared/SnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EA919469F1B7973584A150 /* Shared/SnapshotStore.swift */; };
-		AA79334736E20B08804D9923 /* iOSApp/SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E599D1B882077660C2F95EA /* iOSApp/SettingsView.swift */; };
-		AC3F742AA89A061CF1192CE1 /* Shared/AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F87CDB98A34516AF958C5D /* Shared/AppSettings.swift */; };
-		BC38B378C66CDEAFC26647CC /* Shared/ButtonThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844E4B4E72AAF737E1BAAECD /* Shared/ButtonThemeStyle.swift */; };
-		C0BAA71A99209F1033D50A4B /* Shared/AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F87CDB98A34516AF958C5D /* Shared/AppSettings.swift */; };
-		D56D7A03C9135A0D90E0CBAA /* Shared/SnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EA919469F1B7973584A150 /* Shared/SnapshotStore.swift */; };
-		D84FFB73B0AE6AD66174DFD5 /* WatchApp/WatchWatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76F91DBA11AFBC6E1ABC550 /* WatchApp/WatchWatchlistView.swift */; };
-		D891F3E2DA483CB8570FC081 /* xPriceWatchWidgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B6CBA883C02D128E82BE3672 /* xPriceWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		DE3BB7FFA331D3F46486EA67 /* Shared/TencentMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42B9F38733FB2BBFD2E779 /* Shared/TencentMarketDataProvider.swift */; };
-		DF2311ED9A9E8B68C21F5217 /* Shared/TradingSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B912BB19842417E39EDB5B3 /* Shared/TradingSchedule.swift */; };
-		E33706EF0BE9166C2320AFC8 /* Shared/TradingSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B912BB19842417E39EDB5B3 /* Shared/TradingSchedule.swift */; };
-		EF51F890059204E8B4B5E0D2 /* Shared/EastmoneyMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E68712CB0ADE908BCAED7B /* Shared/EastmoneyMarketDataProvider.swift */; };
-		F53B3A07A4FFF8CDB093472A /* Shared/SinaMarketDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1033F22FE193DB056638EA /* Shared/SinaMarketDataProvider.swift */; };
-		F76818D7AB2D766602407959 /* Shared/MarketModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFEE7B993683005EF264FCD /* Shared/MarketModels.swift */; };
-		FC5AB7DFB5154C71A294C5C7 /* Shared/QuoteRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5D18A08626E45033125609 /* Shared/QuoteRefreshCoordinator.swift */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		7FAA487715F52167EE940122 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8F100F4EEC2C04E5D2E9D925 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F8CFD2C60469E94E741A6F55;
-			remoteInfo = xPriceWatchWidgets;
+		EDFB250E48BCC9A607CDFC25 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = iOSApp/ClosedDatesView.swift;
+			sourceTree = SOURCE_ROOT;
 		};
-		E8971824D03EA4310D42EC46 /* PBXContainerItemProxy */ = {
+		89B95BA413D4AA556485CF98 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			path = iOSApp/Info.plist;
+			sourceTree = SOURCE_ROOT;
+		};
+		2088E9598F41F179D281D796 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = iOSApp/InstrumentDetailView.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		042C311F34AAD2D2B5A8E166 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = iOSApp/ScreenOffQuoteView.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		1E599D1B882077660C2F95EA = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = iOSApp/SettingsView.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE8939D21CE859557A9AAFE7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = iOSApp/StockSearchView.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		E6E89A0345F3BA8C2D20F342 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = iOSApp/WatchlistBackupView.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		0C53FFDB9F02BE70BCF8610D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = iOSApp/WatchlistView.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		E64B9685CAB0B9A1739C881F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = iOSApp/XPriceApp.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		7E1BEC2EFB9A3D0033A8D804 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder.assetcatalog;
+			path = iOSApp/Assets.xcassets;
+			sourceTree = SOURCE_ROOT;
+		};
+		97135A26A2D641586602AE38 = {
+			isa = PBXGroup;
+			name = iOSApp;
+			children = (
+				EDFB250E48BCC9A607CDFC25,
+				89B95BA413D4AA556485CF98,
+				2088E9598F41F179D281D796,
+				042C311F34AAD2D2B5A8E166,
+				1E599D1B882077660C2F95EA,
+				CE8939D21CE859557A9AAFE7,
+				E6E89A0345F3BA8C2D20F342,
+				0C53FFDB9F02BE70BCF8610D,
+				E64B9685CAB0B9A1739C881F,
+				7E1BEC2EFB9A3D0033A8D804,
+			);
+			sourceTree = "<group>";
+		};
+		5EEBC0955A5F6BF2239002D2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			path = WatchApp/Info.plist;
+			sourceTree = SOURCE_ROOT;
+		};
+		60CCC88D3AF5C62C94B3FBD5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = WatchApp/WatchSettingsView.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		F76F91DBA11AFBC6E1ABC550 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = WatchApp/WatchWatchlistView.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		26BDCAE0032B801EAA5FD719 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = WatchApp/XPriceWatchApp.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		7F211D932DA1652D0D313D60 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder.assetcatalog;
+			path = WatchApp/Assets.xcassets;
+			sourceTree = SOURCE_ROOT;
+		};
+		F7AC3FA6519530509FC00464 = {
+			isa = PBXGroup;
+			name = WatchApp;
+			children = (
+				5EEBC0955A5F6BF2239002D2,
+				60CCC88D3AF5C62C94B3FBD5,
+				F76F91DBA11AFBC6E1ABC550,
+				26BDCAE0032B801EAA5FD719,
+				7F211D932DA1652D0D313D60,
+			);
+			sourceTree = "<group>";
+		};
+		E904AE3C6E35E08339074656 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			path = WatchWidgets/Info.plist;
+			sourceTree = SOURCE_ROOT;
+		};
+		56C678557578214E17DFCF37 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = WatchWidgets/XPriceQuoteWidget.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		09303D7947A892160E975644 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = WatchWidgets/XPriceWatchWidgets.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		DC5D6F87538314089220C9A7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder.assetcatalog;
+			path = WatchWidgets/Assets.xcassets;
+			sourceTree = SOURCE_ROOT;
+		};
+		862BC6B1F7F5A9C8415CB74F = {
+			isa = PBXGroup;
+			name = WatchWidgets;
+			children = (
+				E904AE3C6E35E08339074656,
+				56C678557578214E17DFCF37,
+				09303D7947A892160E975644,
+				DC5D6F87538314089220C9A7,
+			);
+			sourceTree = "<group>";
+		};
+		B3F87CDB98A34516AF958C5D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/AppSettings.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		1E78F87489C63844139F8C97 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/AppStore.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		844E4B4E72AAF737E1BAAECD = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/ButtonThemeStyle.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		E3E68712CB0ADE908BCAED7B = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/EastmoneyMarketDataProvider.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		29FDCE958A2C33D358121251 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/FontSizeStyle.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		C8D248C74586141746560EBB = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/MarketDataProviders.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		3FFEE7B993683005EF264FCD = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/MarketModels.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		7C4044898A5F7161B6E40DDB = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/QuoteFormatting.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		5A5D18A08626E45033125609 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/QuoteRefreshCoordinator.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		4ED24791CCA9B90A938821D9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/QuoteStatus.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		AB25AD4DDDB5247330FA3F17 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/ScreenOffSelection.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		2A1033F22FE193DB056638EA = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/SinaMarketDataProvider.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		70EA919469F1B7973584A150 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/SnapshotStore.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		873182DBEEBFF662073C3B0B = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/SyncConfirmation.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		DC42B9F38733FB2BBFD2E779 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/TencentMarketDataProvider.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		6B912BB19842417E39EDB5B3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/TradingSchedule.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		A9027FFBAD4B33AAD0E07A6F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/WatchSyncBridge.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		3EF43657CA996C0538428A02 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Shared/WatchlistBackup.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		F676472493F940F20A95EC9C = {
+			isa = PBXGroup;
+			name = Shared;
+			children = (
+				B3F87CDB98A34516AF958C5D,
+				1E78F87489C63844139F8C97,
+				844E4B4E72AAF737E1BAAECD,
+				E3E68712CB0ADE908BCAED7B,
+				29FDCE958A2C33D358121251,
+				C8D248C74586141746560EBB,
+				3FFEE7B993683005EF264FCD,
+				7C4044898A5F7161B6E40DDB,
+				5A5D18A08626E45033125609,
+				4ED24791CCA9B90A938821D9,
+				AB25AD4DDDB5247330FA3F17,
+				2A1033F22FE193DB056638EA,
+				70EA919469F1B7973584A150,
+				873182DBEEBFF662073C3B0B,
+				DC42B9F38733FB2BBFD2E779,
+				6B912BB19842417E39EDB5B3,
+				A9027FFBAD4B33AAD0E07A6F,
+				3EF43657CA996C0538428A02,
+			);
+			sourceTree = "<group>";
+		};
+		4371B896C7A2364450983432 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.xcconfig;
+			path = Configuration/Local.xcconfig;
+			sourceTree = SOURCE_ROOT;
+		};
+		E3EF12C82601228AA8A9D703 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.entitlements;
+			path = Configuration/xPrice.entitlements;
+			sourceTree = SOURCE_ROOT;
+		};
+		C302FCE10690659166F2A6B1 = {
+			isa = PBXGroup;
+			name = Configuration;
+			children = (
+				4371B896C7A2364450983432,
+				E3EF12C82601228AA8A9D703,
+			);
+			sourceTree = "<group>";
+		};
+		1B06F9F6F0438F4E29AE15E0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/ButtonThemeTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		F3C4BEE10F7F21F74D8FAC47 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/EastmoneyMarketDataTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		FADF09235E4488F8F59FA7D0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/FontSizeTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		F26C3AE0AFE50F346271BD5F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/MarketDataProviderRoutingTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		0E4288E1148C00E0D808BF70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/MarketDataTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		36011520496A1792C70AF4F2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/QuoteStatusTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		920FD40236C6D41174FF1CC5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/RefreshCoordinatorTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		B5F46E029DA16C1E79E3B1B5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/ScreenOffSelectionTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		9B114A81748F948AB24264F7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/SinaMarketDataTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		E270C0943B8E7D377DC8D2C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/StorePolicyTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		A8304C9481F92031D82AE05D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/SyncConfirmationTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		6F8D3B2C8BD3B142703D2664 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/TradingScheduleTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		A2AAB5A2C5CE86C4759A3C7D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Tests/WatchlistBackupTests.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		5DEEF23BB19BA31F06501420 = {
+			isa = PBXGroup;
+			name = Tests;
+			children = (
+				1B06F9F6F0438F4E29AE15E0,
+				F3C4BEE10F7F21F74D8FAC47,
+				FADF09235E4488F8F59FA7D0,
+				F26C3AE0AFE50F346271BD5F,
+				0E4288E1148C00E0D808BF70,
+				36011520496A1792C70AF4F2,
+				920FD40236C6D41174FF1CC5,
+				B5F46E029DA16C1E79E3B1B5,
+				9B114A81748F948AB24264F7,
+				E270C0943B8E7D377DC8D2C3,
+				A8304C9481F92031D82AE05D,
+				6F8D3B2C8BD3B142703D2664,
+				A2AAB5A2C5CE86C4759A3C7D,
+			);
+			sourceTree = "<group>";
+		};
+		B9F7B9909368486984A198AE = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			path = xPrice.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4583B50D86C276EA3C4E3639 = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			path = xPriceWatch.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B6CBA883C02D128E82BE3672 = {
+			isa = PBXFileReference;
+			explicitFileType = "wrapper.app-extension";
+			includeInIndex = 0;
+			path = xPriceWatchWidgets.appex;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA104ADDA96D7F8614638512 = {
+			isa = PBXGroup;
+			name = Products;
+			children = (
+				B9F7B9909368486984A198AE,
+				4583B50D86C276EA3C4E3639,
+				B6CBA883C02D128E82BE3672,
+			);
+			sourceTree = "<group>";
+		};
+		1668DD81910F5DFCA040C6D5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = net.daringfireball.markdown;
+			path = README.md;
+			sourceTree = SOURCE_ROOT;
+		};
+		F373170B98C7A6F293C3D011 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Package.swift;
+			sourceTree = SOURCE_ROOT;
+		};
+		1E471716BFC90C23C0D9B228 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.script.python;
+			path = Scripts/generate_project.py;
+			sourceTree = SOURCE_ROOT;
+		};
+		9B59FDAC1D4DDA1E319FECE2 = {
+			isa = PBXGroup;
+			children = (
+				97135A26A2D641586602AE38,
+				F7AC3FA6519530509FC00464,
+				862BC6B1F7F5A9C8415CB74F,
+				F676472493F940F20A95EC9C,
+				C302FCE10690659166F2A6B1,
+				5DEEF23BB19BA31F06501420,
+				1668DD81910F5DFCA040C6D5,
+				F373170B98C7A6F293C3D011,
+				1E471716BFC90C23C0D9B228,
+				DA104ADDA96D7F8614638512,
+			);
+			sourceTree = "<group>";
+		};
+		296B3CBE4D22E990D9064D57 = {
+			isa = PBXBuildFile;
+			fileRef = EDFB250E48BCC9A607CDFC25;
+		};
+		32A364204FFE9E0493F91A3D = {
+			isa = PBXBuildFile;
+			fileRef = 2088E9598F41F179D281D796;
+		};
+		21680E3F1B4B181B0F5F0DD2 = {
+			isa = PBXBuildFile;
+			fileRef = 042C311F34AAD2D2B5A8E166;
+		};
+		AA79334736E20B08804D9923 = {
+			isa = PBXBuildFile;
+			fileRef = 1E599D1B882077660C2F95EA;
+		};
+		2B37D239F5C1D75A1CE8EE9A = {
+			isa = PBXBuildFile;
+			fileRef = CE8939D21CE859557A9AAFE7;
+		};
+		70AC80896C83B60B9FB39521 = {
+			isa = PBXBuildFile;
+			fileRef = E6E89A0345F3BA8C2D20F342;
+		};
+		525430D14DF377DE9D8E6034 = {
+			isa = PBXBuildFile;
+			fileRef = 0C53FFDB9F02BE70BCF8610D;
+		};
+		7F05403EA11E46CD73F2E343 = {
+			isa = PBXBuildFile;
+			fileRef = E64B9685CAB0B9A1739C881F;
+		};
+		C0BAA71A99209F1033D50A4B = {
+			isa = PBXBuildFile;
+			fileRef = B3F87CDB98A34516AF958C5D;
+		};
+		67E17B74A7155AA4CCEAFF67 = {
+			isa = PBXBuildFile;
+			fileRef = 1E78F87489C63844139F8C97;
+		};
+		BC38B378C66CDEAFC26647CC = {
+			isa = PBXBuildFile;
+			fileRef = 844E4B4E72AAF737E1BAAECD;
+		};
+		EF51F890059204E8B4B5E0D2 = {
+			isa = PBXBuildFile;
+			fileRef = E3E68712CB0ADE908BCAED7B;
+		};
+		BE8CD4D4FB639BD137679856 = {
+			isa = PBXBuildFile;
+			fileRef = 29FDCE958A2C33D358121251;
+		};
+		64CB40C42C27092A52C21FE0 = {
+			isa = PBXBuildFile;
+			fileRef = C8D248C74586141746560EBB;
+		};
+		A175FC9EAB7DD0CB06043DD5 = {
+			isa = PBXBuildFile;
+			fileRef = 3FFEE7B993683005EF264FCD;
+		};
+		6B51DD89A6FD2C6155226BE1 = {
+			isa = PBXBuildFile;
+			fileRef = 7C4044898A5F7161B6E40DDB;
+		};
+		8D4711AC4054F43E5D625078 = {
+			isa = PBXBuildFile;
+			fileRef = 5A5D18A08626E45033125609;
+		};
+		84E515E09CE80B4D8C19FF24 = {
+			isa = PBXBuildFile;
+			fileRef = 4ED24791CCA9B90A938821D9;
+		};
+		250329EFF7003A7061AF51E9 = {
+			isa = PBXBuildFile;
+			fileRef = AB25AD4DDDB5247330FA3F17;
+		};
+		7A99523D3D188AB2C57B9EE6 = {
+			isa = PBXBuildFile;
+			fileRef = 2A1033F22FE193DB056638EA;
+		};
+		6D71FB9103ABF502577A4514 = {
+			isa = PBXBuildFile;
+			fileRef = 70EA919469F1B7973584A150;
+		};
+		760AB9A9DB8C8465AE30BDA8 = {
+			isa = PBXBuildFile;
+			fileRef = 873182DBEEBFF662073C3B0B;
+		};
+		1B5BED957AC32BFDE52F2B1D = {
+			isa = PBXBuildFile;
+			fileRef = DC42B9F38733FB2BBFD2E779;
+		};
+		9F5183649FC91625EED3CCA9 = {
+			isa = PBXBuildFile;
+			fileRef = 6B912BB19842417E39EDB5B3;
+		};
+		8CAA0360DB53A5A3E1883C8E = {
+			isa = PBXBuildFile;
+			fileRef = A9027FFBAD4B33AAD0E07A6F;
+		};
+		08F92BEC84C1B47D7154B755 = {
+			isa = PBXBuildFile;
+			fileRef = 3EF43657CA996C0538428A02;
+		};
+		5FD494801BC196847AB563E5 = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				296B3CBE4D22E990D9064D57,
+				32A364204FFE9E0493F91A3D,
+				21680E3F1B4B181B0F5F0DD2,
+				AA79334736E20B08804D9923,
+				2B37D239F5C1D75A1CE8EE9A,
+				70AC80896C83B60B9FB39521,
+				525430D14DF377DE9D8E6034,
+				7F05403EA11E46CD73F2E343,
+				C0BAA71A99209F1033D50A4B,
+				67E17B74A7155AA4CCEAFF67,
+				BC38B378C66CDEAFC26647CC,
+				EF51F890059204E8B4B5E0D2,
+				BE8CD4D4FB639BD137679856,
+				64CB40C42C27092A52C21FE0,
+				A175FC9EAB7DD0CB06043DD5,
+				6B51DD89A6FD2C6155226BE1,
+				8D4711AC4054F43E5D625078,
+				84E515E09CE80B4D8C19FF24,
+				250329EFF7003A7061AF51E9,
+				7A99523D3D188AB2C57B9EE6,
+				6D71FB9103ABF502577A4514,
+				760AB9A9DB8C8465AE30BDA8,
+				1B5BED957AC32BFDE52F2B1D,
+				9F5183649FC91625EED3CCA9,
+				8CAA0360DB53A5A3E1883C8E,
+				08F92BEC84C1B47D7154B755,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C67B383554429AF2241A81BF = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		417836BD547D782D1E218AEF = {
+			isa = PBXBuildFile;
+			fileRef = 7E1BEC2EFB9A3D0033A8D804;
+		};
+		C511FA96AED8001A201E2AED = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				417836BD547D782D1E218AEF,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E8971824D03EA4310D42EC46 = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 8F100F4EEC2C04E5D2E9D925 /* Project object */;
+			containerPortal = 8F100F4EEC2C04E5D2E9D925;
 			proxyType = 1;
 			remoteGlobalIDString = 02E516E7E0B11207095F41BF;
 			remoteInfo = xPriceWatch;
 		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		427474D6F4614E8F4783AFFA /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				D891F3E2DA483CB8570FC081 /* xPriceWatchWidgets.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
+		8D8B5095F523C835D3FF1A87 = {
+			isa = PBXTargetDependency;
+			target = 02E516E7E0B11207095F41BF;
+			targetProxy = E8971824D03EA4310D42EC46;
 		};
-		9FD50BB9D5BFDC1013C3B7C1 /* Embed Watch Content */ = {
+		4C01606EC1EB5F834A4FAD76 = {
+			isa = PBXBuildFile;
+			fileRef = 4583B50D86C276EA3C4E3639;
+			settings = {
+				ATTRIBUTES = (
+					RemoveHeadersOnCopy,
+				);
+			};
+		};
+		9FD50BB9D5BFDC1013C3B7C1 = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				4C01606EC1EB5F834A4FAD76 /* xPriceWatch.app in Embed Watch Content */,
+				4C01606EC1EB5F834A4FAD76,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXCopyFilesBuildPhase section */
-
-/* Begin PBXFileReference section */
-		09303D7947A892160E975644 /* WatchWidgets/XPriceWatchWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWidgets/XPriceWatchWidgets.swift; sourceTree = SOURCE_ROOT; };
-		0C53FFDB9F02BE70BCF8610D /* iOSApp/WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp/WatchlistView.swift; sourceTree = SOURCE_ROOT; };
-		0E4288E1148C00E0D808BF70 /* Tests/MarketDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/MarketDataTests.swift; sourceTree = SOURCE_ROOT; };
-		1668DD81910F5DFCA040C6D5 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		1B06F9F6F0438F4E29AE15E0 /* Tests/ButtonThemeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/ButtonThemeTests.swift; sourceTree = SOURCE_ROOT; };
-		1E471716BFC90C23C0D9B228 /* Scripts/generate_project.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = Scripts/generate_project.py; sourceTree = SOURCE_ROOT; };
-		1E599D1B882077660C2F95EA /* iOSApp/SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp/SettingsView.swift; sourceTree = SOURCE_ROOT; };
-		1E78F87489C63844139F8C97 /* Shared/AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/AppStore.swift; sourceTree = SOURCE_ROOT; };
-		2088E9598F41F179D281D796 /* iOSApp/InstrumentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp/InstrumentDetailView.swift; sourceTree = SOURCE_ROOT; };
-		26BDCAE0032B801EAA5FD719 /* WatchApp/XPriceWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp/XPriceWatchApp.swift; sourceTree = SOURCE_ROOT; };
-		2A1033F22FE193DB056638EA /* Shared/SinaMarketDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SinaMarketDataProvider.swift; sourceTree = SOURCE_ROOT; };
-		36011520496A1792C70AF4F2 /* Tests/QuoteStatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/QuoteStatusTests.swift; sourceTree = SOURCE_ROOT; };
-		3EF43657CA996C0538428A02 /* Shared/WatchlistBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WatchlistBackup.swift; sourceTree = SOURCE_ROOT; };
-		3FFEE7B993683005EF264FCD /* Shared/MarketModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/MarketModels.swift; sourceTree = SOURCE_ROOT; };
-		4371B896C7A2364450983432 /* Configuration/Local.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Configuration/Local.xcconfig; sourceTree = SOURCE_ROOT; };
-		4583B50D86C276EA3C4E3639 /* xPriceWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xPriceWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4ED24791CCA9B90A938821D9 /* Shared/QuoteStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/QuoteStatus.swift; sourceTree = SOURCE_ROOT; };
-		56C678557578214E17DFCF37 /* WatchWidgets/XPriceQuoteWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWidgets/XPriceQuoteWidget.swift; sourceTree = SOURCE_ROOT; };
-		5A5D18A08626E45033125609 /* Shared/QuoteRefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/QuoteRefreshCoordinator.swift; sourceTree = SOURCE_ROOT; };
-		5EEBC0955A5F6BF2239002D2 /* WatchApp/Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = WatchApp/Info.plist; sourceTree = SOURCE_ROOT; };
-		60CCC88D3AF5C62C94B3FBD5 /* WatchApp/WatchSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp/WatchSettingsView.swift; sourceTree = SOURCE_ROOT; };
-		6B912BB19842417E39EDB5B3 /* Shared/TradingSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/TradingSchedule.swift; sourceTree = SOURCE_ROOT; };
-		6F8D3B2C8BD3B142703D2664 /* Tests/TradingScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/TradingScheduleTests.swift; sourceTree = SOURCE_ROOT; };
-		70EA919469F1B7973584A150 /* Shared/SnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SnapshotStore.swift; sourceTree = SOURCE_ROOT; };
-		7C4044898A5F7161B6E40DDB /* Shared/QuoteFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/QuoteFormatting.swift; sourceTree = SOURCE_ROOT; };
-		7E1BEC2EFB9A3D0033A8D804 /* iOSApp/Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = iOSApp/Assets.xcassets; sourceTree = SOURCE_ROOT; };
-		7F211D932DA1652D0D313D60 /* WatchApp/Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = WatchApp/Assets.xcassets; sourceTree = SOURCE_ROOT; };
-		844E4B4E72AAF737E1BAAECD /* Shared/ButtonThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/ButtonThemeStyle.swift; sourceTree = SOURCE_ROOT; };
-		873182DBEEBFF662073C3B0B /* Shared/SyncConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SyncConfirmation.swift; sourceTree = SOURCE_ROOT; };
-		89B95BA413D4AA556485CF98 /* iOSApp/Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = iOSApp/Info.plist; sourceTree = SOURCE_ROOT; };
-		920FD40236C6D41174FF1CC5 /* Tests/RefreshCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/RefreshCoordinatorTests.swift; sourceTree = SOURCE_ROOT; };
-		9B114A81748F948AB24264F7 /* Tests/SinaMarketDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SinaMarketDataTests.swift; sourceTree = SOURCE_ROOT; };
-		A2AAB5A2C5CE86C4759A3C7D /* Tests/WatchlistBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/WatchlistBackupTests.swift; sourceTree = SOURCE_ROOT; };
-		A8304C9481F92031D82AE05D /* Tests/SyncConfirmationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SyncConfirmationTests.swift; sourceTree = SOURCE_ROOT; };
-		A9027FFBAD4B33AAD0E07A6F /* Shared/WatchSyncBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WatchSyncBridge.swift; sourceTree = SOURCE_ROOT; };
-		B3F87CDB98A34516AF958C5D /* Shared/AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/AppSettings.swift; sourceTree = SOURCE_ROOT; };
-		B6CBA883C02D128E82BE3672 /* xPriceWatchWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = xPriceWatchWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		B9F7B9909368486984A198AE /* xPrice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xPrice.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C8D248C74586141746560EBB /* Shared/MarketDataProviders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/MarketDataProviders.swift; sourceTree = SOURCE_ROOT; };
-		CE8939D21CE859557A9AAFE7 /* iOSApp/StockSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp/StockSearchView.swift; sourceTree = SOURCE_ROOT; };
-		DC42B9F38733FB2BBFD2E779 /* Shared/TencentMarketDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/TencentMarketDataProvider.swift; sourceTree = SOURCE_ROOT; };
-		DC5D6F87538314089220C9A7 /* WatchWidgets/Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = WatchWidgets/Assets.xcassets; sourceTree = SOURCE_ROOT; };
-		E270C0943B8E7D377DC8D2C3 /* Tests/StorePolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/StorePolicyTests.swift; sourceTree = SOURCE_ROOT; };
-		E3E68712CB0ADE908BCAED7B /* Shared/EastmoneyMarketDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/EastmoneyMarketDataProvider.swift; sourceTree = SOURCE_ROOT; };
-		E3EF12C82601228AA8A9D703 /* Configuration/xPrice.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Configuration/xPrice.entitlements; sourceTree = SOURCE_ROOT; };
-		E64B9685CAB0B9A1739C881F /* iOSApp/XPriceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp/XPriceApp.swift; sourceTree = SOURCE_ROOT; };
-		E6E89A0345F3BA8C2D20F342 /* iOSApp/WatchlistBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp/WatchlistBackupView.swift; sourceTree = SOURCE_ROOT; };
-		E904AE3C6E35E08339074656 /* WatchWidgets/Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = WatchWidgets/Info.plist; sourceTree = SOURCE_ROOT; };
-		EDFB250E48BCC9A607CDFC25 /* iOSApp/ClosedDatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp/ClosedDatesView.swift; sourceTree = SOURCE_ROOT; };
-		F26C3AE0AFE50F346271BD5F /* Tests/MarketDataProviderRoutingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/MarketDataProviderRoutingTests.swift; sourceTree = SOURCE_ROOT; };
-		F373170B98C7A6F293C3D011 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
-		F3C4BEE10F7F21F74D8FAC47 /* Tests/EastmoneyMarketDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/EastmoneyMarketDataTests.swift; sourceTree = SOURCE_ROOT; };
-		F76F91DBA11AFBC6E1ABC550 /* WatchApp/WatchWatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp/WatchWatchlistView.swift; sourceTree = SOURCE_ROOT; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		59349A251A8A76F500F1B2D0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
+		0692BE2A041D92685E2D5C00 = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4371B896C7A2364450983432;
+			buildSettings = {
+				DEVELOPMENT_TEAM = W2V2AK8X63;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_IOS_BUNDLE_ID)";
+				INFOPLIST_FILE = iOSApp/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 5.0;
+				MARKETING_VERSION = 0.1.0;
+				CURRENT_PROJECT_VERSION = 1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SKIP_INSTALL = NO;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+			};
+			name = Debug;
 		};
-		62F5CF1A071DD3719A7AC59F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
+		6A20750AB2E7C4BCC6455906 = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4371B896C7A2364450983432;
+			buildSettings = {
+				DEVELOPMENT_TEAM = W2V2AK8X63;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_IOS_BUNDLE_ID)";
+				INFOPLIST_FILE = iOSApp/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 5.0;
+				MARKETING_VERSION = 0.1.0;
+				CURRENT_PROJECT_VERSION = 1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SKIP_INSTALL = NO;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+			};
+			name = Release;
 		};
-		C67B383554429AF2241A81BF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+		64334594F46795DBDF377FCD = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0692BE2A041D92685E2D5C00,
+				6A20750AB2E7C4BCC6455906,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		5DEEF23BB19BA31F06501420 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				1B06F9F6F0438F4E29AE15E0 /* Tests/ButtonThemeTests.swift */,
-				F3C4BEE10F7F21F74D8FAC47 /* Tests/EastmoneyMarketDataTests.swift */,
-				F26C3AE0AFE50F346271BD5F /* Tests/MarketDataProviderRoutingTests.swift */,
-				0E4288E1148C00E0D808BF70 /* Tests/MarketDataTests.swift */,
-				36011520496A1792C70AF4F2 /* Tests/QuoteStatusTests.swift */,
-				920FD40236C6D41174FF1CC5 /* Tests/RefreshCoordinatorTests.swift */,
-				9B114A81748F948AB24264F7 /* Tests/SinaMarketDataTests.swift */,
-				E270C0943B8E7D377DC8D2C3 /* Tests/StorePolicyTests.swift */,
-				A8304C9481F92031D82AE05D /* Tests/SyncConfirmationTests.swift */,
-				6F8D3B2C8BD3B142703D2664 /* Tests/TradingScheduleTests.swift */,
-				A2AAB5A2C5CE86C4759A3C7D /* Tests/WatchlistBackupTests.swift */,
-			);
-			name = Tests;
-			sourceTree = "<group>";
-		};
-		862BC6B1F7F5A9C8415CB74F /* WatchWidgets */ = {
-			isa = PBXGroup;
-			children = (
-				E904AE3C6E35E08339074656 /* WatchWidgets/Info.plist */,
-				56C678557578214E17DFCF37 /* WatchWidgets/XPriceQuoteWidget.swift */,
-				09303D7947A892160E975644 /* WatchWidgets/XPriceWatchWidgets.swift */,
-				DC5D6F87538314089220C9A7 /* WatchWidgets/Assets.xcassets */,
-			);
-			name = WatchWidgets;
-			sourceTree = "<group>";
-		};
-		97135A26A2D641586602AE38 /* iOSApp */ = {
-			isa = PBXGroup;
-			children = (
-				EDFB250E48BCC9A607CDFC25 /* iOSApp/ClosedDatesView.swift */,
-				89B95BA413D4AA556485CF98 /* iOSApp/Info.plist */,
-				2088E9598F41F179D281D796 /* iOSApp/InstrumentDetailView.swift */,
-				1E599D1B882077660C2F95EA /* iOSApp/SettingsView.swift */,
-				CE8939D21CE859557A9AAFE7 /* iOSApp/StockSearchView.swift */,
-				E6E89A0345F3BA8C2D20F342 /* iOSApp/WatchlistBackupView.swift */,
-				0C53FFDB9F02BE70BCF8610D /* iOSApp/WatchlistView.swift */,
-				E64B9685CAB0B9A1739C881F /* iOSApp/XPriceApp.swift */,
-				7E1BEC2EFB9A3D0033A8D804 /* iOSApp/Assets.xcassets */,
-			);
-			name = iOSApp;
-			sourceTree = "<group>";
-		};
-		9B59FDAC1D4DDA1E319FECE2 = {
-			isa = PBXGroup;
-			children = (
-				97135A26A2D641586602AE38 /* iOSApp */,
-				F7AC3FA6519530509FC00464 /* WatchApp */,
-				862BC6B1F7F5A9C8415CB74F /* WatchWidgets */,
-				F676472493F940F20A95EC9C /* Shared */,
-				C302FCE10690659166F2A6B1 /* Configuration */,
-				5DEEF23BB19BA31F06501420 /* Tests */,
-				1668DD81910F5DFCA040C6D5 /* README.md */,
-				F373170B98C7A6F293C3D011 /* Package.swift */,
-				1E471716BFC90C23C0D9B228 /* Scripts/generate_project.py */,
-				DA104ADDA96D7F8614638512 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		C302FCE10690659166F2A6B1 /* Configuration */ = {
-			isa = PBXGroup;
-			children = (
-				4371B896C7A2364450983432 /* Configuration/Local.xcconfig */,
-				E3EF12C82601228AA8A9D703 /* Configuration/xPrice.entitlements */,
-			);
-			name = Configuration;
-			sourceTree = "<group>";
-		};
-		DA104ADDA96D7F8614638512 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B9F7B9909368486984A198AE /* xPrice.app */,
-				4583B50D86C276EA3C4E3639 /* xPriceWatch.app */,
-				B6CBA883C02D128E82BE3672 /* xPriceWatchWidgets.appex */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F676472493F940F20A95EC9C /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				B3F87CDB98A34516AF958C5D /* Shared/AppSettings.swift */,
-				1E78F87489C63844139F8C97 /* Shared/AppStore.swift */,
-				844E4B4E72AAF737E1BAAECD /* Shared/ButtonThemeStyle.swift */,
-				E3E68712CB0ADE908BCAED7B /* Shared/EastmoneyMarketDataProvider.swift */,
-				C8D248C74586141746560EBB /* Shared/MarketDataProviders.swift */,
-				3FFEE7B993683005EF264FCD /* Shared/MarketModels.swift */,
-				7C4044898A5F7161B6E40DDB /* Shared/QuoteFormatting.swift */,
-				5A5D18A08626E45033125609 /* Shared/QuoteRefreshCoordinator.swift */,
-				4ED24791CCA9B90A938821D9 /* Shared/QuoteStatus.swift */,
-				2A1033F22FE193DB056638EA /* Shared/SinaMarketDataProvider.swift */,
-				70EA919469F1B7973584A150 /* Shared/SnapshotStore.swift */,
-				873182DBEEBFF662073C3B0B /* Shared/SyncConfirmation.swift */,
-				DC42B9F38733FB2BBFD2E779 /* Shared/TencentMarketDataProvider.swift */,
-				6B912BB19842417E39EDB5B3 /* Shared/TradingSchedule.swift */,
-				A9027FFBAD4B33AAD0E07A6F /* Shared/WatchSyncBridge.swift */,
-				3EF43657CA996C0538428A02 /* Shared/WatchlistBackup.swift */,
-			);
-			name = Shared;
-			sourceTree = "<group>";
-		};
-		F7AC3FA6519530509FC00464 /* WatchApp */ = {
-			isa = PBXGroup;
-			children = (
-				5EEBC0955A5F6BF2239002D2 /* WatchApp/Info.plist */,
-				60CCC88D3AF5C62C94B3FBD5 /* WatchApp/WatchSettingsView.swift */,
-				F76F91DBA11AFBC6E1ABC550 /* WatchApp/WatchWatchlistView.swift */,
-				26BDCAE0032B801EAA5FD719 /* WatchApp/XPriceWatchApp.swift */,
-				7F211D932DA1652D0D313D60 /* WatchApp/Assets.xcassets */,
-			);
-			name = WatchApp;
-			sourceTree = "<group>";
-		};
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		02E516E7E0B11207095F41BF /* xPriceWatch */ = {
+		AB3FF082BCF1D23FAE760851 = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1CCA7B0C798AE522B7FA8061 /* Build configuration list for PBXNativeTarget "xPriceWatch" */;
+			buildConfigurationList = 64334594F46795DBDF377FCD;
 			buildPhases = (
-				0CB1B62D0DA801C88E55AA5A /* Sources */,
-				62F5CF1A071DD3719A7AC59F /* Frameworks */,
-				EB5CB5C6D37EE85D7F102B63 /* Resources */,
-				427474D6F4614E8F4783AFFA /* Embed App Extensions */,
+				5FD494801BC196847AB563E5,
+				C67B383554429AF2241A81BF,
+				C511FA96AED8001A201E2AED,
+				9FD50BB9D5BFDC1013C3B7C1,
 			);
 			buildRules = (
+
 			);
 			dependencies = (
-				C50913F544C6D24CAAA07D73 /* PBXTargetDependency */,
-			);
-			name = xPriceWatch;
-			productName = xPriceWatch;
-			productReference = 4583B50D86C276EA3C4E3639 /* xPriceWatch.app */;
-			productType = "com.apple.product-type.application";
-		};
-		AB3FF082BCF1D23FAE760851 /* xPrice */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 64334594F46795DBDF377FCD /* Build configuration list for PBXNativeTarget "xPrice" */;
-			buildPhases = (
-				5FD494801BC196847AB563E5 /* Sources */,
-				C67B383554429AF2241A81BF /* Frameworks */,
-				C511FA96AED8001A201E2AED /* Resources */,
-				9FD50BB9D5BFDC1013C3B7C1 /* Embed Watch Content */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				8D8B5095F523C835D3FF1A87 /* PBXTargetDependency */,
+				8D8B5095F523C835D3FF1A87,
 			);
 			name = xPrice;
 			productName = xPrice;
-			productReference = B9F7B9909368486984A198AE /* xPrice.app */;
+			productReference = B9F7B9909368486984A198AE;
 			productType = "com.apple.product-type.application";
 		};
-		F8CFD2C60469E94E741A6F55 /* xPriceWatchWidgets */ = {
+		9532F82BD3AC4F6E6C02CC9D = {
+			isa = PBXBuildFile;
+			fileRef = 60CCC88D3AF5C62C94B3FBD5;
+		};
+		D84FFB73B0AE6AD66174DFD5 = {
+			isa = PBXBuildFile;
+			fileRef = F76F91DBA11AFBC6E1ABC550;
+		};
+		4333A77DFEB4C84A887B17A4 = {
+			isa = PBXBuildFile;
+			fileRef = 26BDCAE0032B801EAA5FD719;
+		};
+		AC3F742AA89A061CF1192CE1 = {
+			isa = PBXBuildFile;
+			fileRef = B3F87CDB98A34516AF958C5D;
+		};
+		8FCDBDCA842BEE7EE6680D19 = {
+			isa = PBXBuildFile;
+			fileRef = 1E78F87489C63844139F8C97;
+		};
+		2BFB38033C43E70110F03198 = {
+			isa = PBXBuildFile;
+			fileRef = 844E4B4E72AAF737E1BAAECD;
+		};
+		8DC812048D217BAC3116747D = {
+			isa = PBXBuildFile;
+			fileRef = E3E68712CB0ADE908BCAED7B;
+		};
+		556FA8903BF4CB8AA2478862 = {
+			isa = PBXBuildFile;
+			fileRef = 29FDCE958A2C33D358121251;
+		};
+		375D381B2166FF27E4EC8081 = {
+			isa = PBXBuildFile;
+			fileRef = C8D248C74586141746560EBB;
+		};
+		F76818D7AB2D766602407959 = {
+			isa = PBXBuildFile;
+			fileRef = 3FFEE7B993683005EF264FCD;
+		};
+		52D59953B47132EF9F86DD58 = {
+			isa = PBXBuildFile;
+			fileRef = 7C4044898A5F7161B6E40DDB;
+		};
+		FC5AB7DFB5154C71A294C5C7 = {
+			isa = PBXBuildFile;
+			fileRef = 5A5D18A08626E45033125609;
+		};
+		17E185FDB951C915A9C9BCE9 = {
+			isa = PBXBuildFile;
+			fileRef = 4ED24791CCA9B90A938821D9;
+		};
+		8913C22B36080DFF8B102B2E = {
+			isa = PBXBuildFile;
+			fileRef = AB25AD4DDDB5247330FA3F17;
+		};
+		F53B3A07A4FFF8CDB093472A = {
+			isa = PBXBuildFile;
+			fileRef = 2A1033F22FE193DB056638EA;
+		};
+		A7705048AAC7DB41D3B7035F = {
+			isa = PBXBuildFile;
+			fileRef = 70EA919469F1B7973584A150;
+		};
+		41D42130A517FD2F7407CBAA = {
+			isa = PBXBuildFile;
+			fileRef = 873182DBEEBFF662073C3B0B;
+		};
+		DE3BB7FFA331D3F46486EA67 = {
+			isa = PBXBuildFile;
+			fileRef = DC42B9F38733FB2BBFD2E779;
+		};
+		E33706EF0BE9166C2320AFC8 = {
+			isa = PBXBuildFile;
+			fileRef = 6B912BB19842417E39EDB5B3;
+		};
+		5522D93E4703FB57F245E625 = {
+			isa = PBXBuildFile;
+			fileRef = A9027FFBAD4B33AAD0E07A6F;
+		};
+		14BAB4C5FABC261528D1C01E = {
+			isa = PBXBuildFile;
+			fileRef = 3EF43657CA996C0538428A02;
+		};
+		0CB1B62D0DA801C88E55AA5A = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9532F82BD3AC4F6E6C02CC9D,
+				D84FFB73B0AE6AD66174DFD5,
+				4333A77DFEB4C84A887B17A4,
+				AC3F742AA89A061CF1192CE1,
+				8FCDBDCA842BEE7EE6680D19,
+				2BFB38033C43E70110F03198,
+				8DC812048D217BAC3116747D,
+				556FA8903BF4CB8AA2478862,
+				375D381B2166FF27E4EC8081,
+				F76818D7AB2D766602407959,
+				52D59953B47132EF9F86DD58,
+				FC5AB7DFB5154C71A294C5C7,
+				17E185FDB951C915A9C9BCE9,
+				8913C22B36080DFF8B102B2E,
+				F53B3A07A4FFF8CDB093472A,
+				A7705048AAC7DB41D3B7035F,
+				41D42130A517FD2F7407CBAA,
+				DE3BB7FFA331D3F46486EA67,
+				E33706EF0BE9166C2320AFC8,
+				5522D93E4703FB57F245E625,
+				14BAB4C5FABC261528D1C01E,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62F5CF1A071DD3719A7AC59F = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7D74550BFF97919AE04BAF4A = {
+			isa = PBXBuildFile;
+			fileRef = 7F211D932DA1652D0D313D60;
+		};
+		EB5CB5C6D37EE85D7F102B63 = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D74550BFF97919AE04BAF4A,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7FAA487715F52167EE940122 = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8F100F4EEC2C04E5D2E9D925;
+			proxyType = 1;
+			remoteGlobalIDString = F8CFD2C60469E94E741A6F55;
+			remoteInfo = xPriceWatchWidgets;
+		};
+		C50913F544C6D24CAAA07D73 = {
+			isa = PBXTargetDependency;
+			target = F8CFD2C60469E94E741A6F55;
+			targetProxy = 7FAA487715F52167EE940122;
+		};
+		D891F3E2DA483CB8570FC081 = {
+			isa = PBXBuildFile;
+			fileRef = B6CBA883C02D128E82BE3672;
+			settings = {
+				ATTRIBUTES = (
+					RemoveHeadersOnCopy,
+				);
+			};
+		};
+		427474D6F4614E8F4783AFFA = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D891F3E2DA483CB8570FC081,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC3688FDEF0DBEF500BE0AEF = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4371B896C7A2364450983432;
+			buildSettings = {
+				DEVELOPMENT_TEAM = W2V2AK8X63;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_WATCH_BUNDLE_ID)";
+				INFOPLIST_FILE = WatchApp/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
+				SDKROOT = watchos;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				TARGETED_DEVICE_FAMILY = 4;
+				SWIFT_VERSION = 5.0;
+				MARKETING_VERSION = 0.1.0;
+				CURRENT_PROJECT_VERSION = 1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SKIP_INSTALL = YES;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+			};
+			name = Debug;
+		};
+		A94142F2F7E59EEF4D8C43DD = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4371B896C7A2364450983432;
+			buildSettings = {
+				DEVELOPMENT_TEAM = W2V2AK8X63;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_WATCH_BUNDLE_ID)";
+				INFOPLIST_FILE = WatchApp/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
+				SDKROOT = watchos;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				TARGETED_DEVICE_FAMILY = 4;
+				SWIFT_VERSION = 5.0;
+				MARKETING_VERSION = 0.1.0;
+				CURRENT_PROJECT_VERSION = 1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SKIP_INSTALL = YES;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+			};
+			name = Release;
+		};
+		1CCA7B0C798AE522B7FA8061 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC3688FDEF0DBEF500BE0AEF,
+				A94142F2F7E59EEF4D8C43DD,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		02E516E7E0B11207095F41BF = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6E90792FFF6F9B4EC2D4C84E /* Build configuration list for PBXNativeTarget "xPriceWatchWidgets" */;
+			buildConfigurationList = 1CCA7B0C798AE522B7FA8061;
 			buildPhases = (
-				E10003635801384758CF235F /* Sources */,
-				59349A251A8A76F500F1B2D0 /* Frameworks */,
-				61C018CB04E5CCAA1C8B90CC /* Resources */,
+				0CB1B62D0DA801C88E55AA5A,
+				62F5CF1A071DD3719A7AC59F,
+				EB5CB5C6D37EE85D7F102B63,
+				427474D6F4614E8F4783AFFA,
 			);
 			buildRules = (
+
 			);
 			dependencies = (
+				C50913F544C6D24CAAA07D73,
+			);
+			name = xPriceWatch;
+			productName = xPriceWatch;
+			productReference = 4583B50D86C276EA3C4E3639;
+			productType = "com.apple.product-type.application";
+		};
+		60397645135862043E2B250A = {
+			isa = PBXBuildFile;
+			fileRef = 56C678557578214E17DFCF37;
+		};
+		5C5D6FD34F19B7FE0EBB9C57 = {
+			isa = PBXBuildFile;
+			fileRef = 09303D7947A892160E975644;
+		};
+		42E206B7B346627068DF7B39 = {
+			isa = PBXBuildFile;
+			fileRef = 3FFEE7B993683005EF264FCD;
+		};
+		479686B7DA7D406F30AF3479 = {
+			isa = PBXBuildFile;
+			fileRef = DC42B9F38733FB2BBFD2E779;
+		};
+		28C7B46428B371A1E0881309 = {
+			isa = PBXBuildFile;
+			fileRef = E3E68712CB0ADE908BCAED7B;
+		};
+		19C92DB8475FC6F77B69A1B1 = {
+			isa = PBXBuildFile;
+			fileRef = 2A1033F22FE193DB056638EA;
+		};
+		481F3169B2E8DBDC9633BE79 = {
+			isa = PBXBuildFile;
+			fileRef = C8D248C74586141746560EBB;
+		};
+		4195483BADEBC6E60E8C3477 = {
+			isa = PBXBuildFile;
+			fileRef = B3F87CDB98A34516AF958C5D;
+		};
+		D56D7A03C9135A0D90E0CBAA = {
+			isa = PBXBuildFile;
+			fileRef = 70EA919469F1B7973584A150;
+		};
+		167894338B6ABC1A6FC4E4FC = {
+			isa = PBXBuildFile;
+			fileRef = 7C4044898A5F7161B6E40DDB;
+		};
+		DF2311ED9A9E8B68C21F5217 = {
+			isa = PBXBuildFile;
+			fileRef = 6B912BB19842417E39EDB5B3;
+		};
+		A56D9F47F96555DBD60614D0 = {
+			isa = PBXBuildFile;
+			fileRef = 4ED24791CCA9B90A938821D9;
+		};
+		E10003635801384758CF235F = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60397645135862043E2B250A,
+				5C5D6FD34F19B7FE0EBB9C57,
+				42E206B7B346627068DF7B39,
+				479686B7DA7D406F30AF3479,
+				28C7B46428B371A1E0881309,
+				19C92DB8475FC6F77B69A1B1,
+				481F3169B2E8DBDC9633BE79,
+				4195483BADEBC6E60E8C3477,
+				D56D7A03C9135A0D90E0CBAA,
+				167894338B6ABC1A6FC4E4FC,
+				DF2311ED9A9E8B68C21F5217,
+				A56D9F47F96555DBD60614D0,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		59349A251A8A76F500F1B2D0 = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01C1808012E8FC86C8AF72C9 = {
+			isa = PBXBuildFile;
+			fileRef = DC5D6F87538314089220C9A7;
+		};
+		61C018CB04E5CCAA1C8B90CC = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01C1808012E8FC86C8AF72C9,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1442123EB5E54E71D4DD28F7 = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4371B896C7A2364450983432;
+			buildSettings = {
+				DEVELOPMENT_TEAM = W2V2AK8X63;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_WIDGET_BUNDLE_ID)";
+				INFOPLIST_FILE = WatchWidgets/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
+				SDKROOT = watchos;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				TARGETED_DEVICE_FAMILY = 4;
+				SWIFT_VERSION = 5.0;
+				MARKETING_VERSION = 0.1.0;
+				CURRENT_PROJECT_VERSION = 1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				SKIP_INSTALL = YES;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+			};
+			name = Debug;
+		};
+		B0BB1C6B4C42A1CFB1866A72 = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4371B896C7A2364450983432;
+			buildSettings = {
+				DEVELOPMENT_TEAM = W2V2AK8X63;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_WIDGET_BUNDLE_ID)";
+				INFOPLIST_FILE = WatchWidgets/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
+				SDKROOT = watchos;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				TARGETED_DEVICE_FAMILY = 4;
+				SWIFT_VERSION = 5.0;
+				MARKETING_VERSION = 0.1.0;
+				CURRENT_PROJECT_VERSION = 1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				SKIP_INSTALL = YES;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+			};
+			name = Release;
+		};
+		6E90792FFF6F9B4EC2D4C84E = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1442123EB5E54E71D4DD28F7,
+				B0BB1C6B4C42A1CFB1866A72,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F8CFD2C60469E94E741A6F55 = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6E90792FFF6F9B4EC2D4C84E;
+			buildPhases = (
+				E10003635801384758CF235F,
+				59349A251A8A76F500F1B2D0,
+				61C018CB04E5CCAA1C8B90CC,
+			);
+			buildRules = (
+
+			);
+			dependencies = (
+
 			);
 			name = xPriceWatchWidgets;
 			productName = xPriceWatchWidgets;
-			productReference = B6CBA883C02D128E82BE3672 /* xPriceWatchWidgets.appex */;
+			productReference = B6CBA883C02D128E82BE3672;
 			productType = "com.apple.product-type.app-extension";
 		};
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		8F100F4EEC2C04E5D2E9D925 /* Project object */ = {
+		A18E5E3490047FB8DFAEC467 = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4371B896C7A2364450983432;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				SWIFT_VERSION = 5.0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		313B3F02510B3454D0F33A93 = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4371B896C7A2364450983432;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				SWIFT_VERSION = 5.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5933565277C72F71D9A0BC98 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A18E5E3490047FB8DFAEC467,
+				313B3F02510B3454D0F33A93,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8F100F4EEC2C04E5D2E9D925 = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
-					02E516E7E0B11207095F41BF = {
+					AB3FF082BCF1D23FAE760851 = {
 						CreatedOnToolsVersion = 27.1;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -383,7 +1272,7 @@
 							};
 						};
 					};
-					AB3FF082BCF1D23FAE760851 = {
+					02E516E7E0B11207095F41BF = {
 						CreatedOnToolsVersion = 27.1;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -403,7 +1292,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5933565277C72F71D9A0BC98 /* Build configuration list for PBXProject "xPrice" */;
+			buildConfigurationList = 5933565277C72F71D9A0BC98;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
@@ -413,420 +1302,15 @@
 				Base,
 			);
 			mainGroup = 9B59FDAC1D4DDA1E319FECE2;
-			productRefGroup = DA104ADDA96D7F8614638512 /* Products */;
+			productRefGroup = DA104ADDA96D7F8614638512;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AB3FF082BCF1D23FAE760851 /* xPrice */,
-				02E516E7E0B11207095F41BF /* xPriceWatch */,
-				F8CFD2C60469E94E741A6F55 /* xPriceWatchWidgets */,
+				AB3FF082BCF1D23FAE760851,
+				02E516E7E0B11207095F41BF,
+				F8CFD2C60469E94E741A6F55,
 			);
 		};
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		61C018CB04E5CCAA1C8B90CC /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				01C1808012E8FC86C8AF72C9 /* WatchWidgets/Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C511FA96AED8001A201E2AED /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				417836BD547D782D1E218AEF /* iOSApp/Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EB5CB5C6D37EE85D7F102B63 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7D74550BFF97919AE04BAF4A /* WatchApp/Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		0CB1B62D0DA801C88E55AA5A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9532F82BD3AC4F6E6C02CC9D /* WatchApp/WatchSettingsView.swift in Sources */,
-				D84FFB73B0AE6AD66174DFD5 /* WatchApp/WatchWatchlistView.swift in Sources */,
-				4333A77DFEB4C84A887B17A4 /* WatchApp/XPriceWatchApp.swift in Sources */,
-				AC3F742AA89A061CF1192CE1 /* Shared/AppSettings.swift in Sources */,
-				8FCDBDCA842BEE7EE6680D19 /* Shared/AppStore.swift in Sources */,
-				2BFB38033C43E70110F03198 /* Shared/ButtonThemeStyle.swift in Sources */,
-				8DC812048D217BAC3116747D /* Shared/EastmoneyMarketDataProvider.swift in Sources */,
-				375D381B2166FF27E4EC8081 /* Shared/MarketDataProviders.swift in Sources */,
-				F76818D7AB2D766602407959 /* Shared/MarketModels.swift in Sources */,
-				52D59953B47132EF9F86DD58 /* Shared/QuoteFormatting.swift in Sources */,
-				FC5AB7DFB5154C71A294C5C7 /* Shared/QuoteRefreshCoordinator.swift in Sources */,
-				17E185FDB951C915A9C9BCE9 /* Shared/QuoteStatus.swift in Sources */,
-				F53B3A07A4FFF8CDB093472A /* Shared/SinaMarketDataProvider.swift in Sources */,
-				A7705048AAC7DB41D3B7035F /* Shared/SnapshotStore.swift in Sources */,
-				41D42130A517FD2F7407CBAA /* Shared/SyncConfirmation.swift in Sources */,
-				DE3BB7FFA331D3F46486EA67 /* Shared/TencentMarketDataProvider.swift in Sources */,
-				E33706EF0BE9166C2320AFC8 /* Shared/TradingSchedule.swift in Sources */,
-				5522D93E4703FB57F245E625 /* Shared/WatchSyncBridge.swift in Sources */,
-				14BAB4C5FABC261528D1C01E /* Shared/WatchlistBackup.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5FD494801BC196847AB563E5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				296B3CBE4D22E990D9064D57 /* iOSApp/ClosedDatesView.swift in Sources */,
-				32A364204FFE9E0493F91A3D /* iOSApp/InstrumentDetailView.swift in Sources */,
-				AA79334736E20B08804D9923 /* iOSApp/SettingsView.swift in Sources */,
-				2B37D239F5C1D75A1CE8EE9A /* iOSApp/StockSearchView.swift in Sources */,
-				70AC80896C83B60B9FB39521 /* iOSApp/WatchlistBackupView.swift in Sources */,
-				525430D14DF377DE9D8E6034 /* iOSApp/WatchlistView.swift in Sources */,
-				7F05403EA11E46CD73F2E343 /* iOSApp/XPriceApp.swift in Sources */,
-				C0BAA71A99209F1033D50A4B /* Shared/AppSettings.swift in Sources */,
-				67E17B74A7155AA4CCEAFF67 /* Shared/AppStore.swift in Sources */,
-				BC38B378C66CDEAFC26647CC /* Shared/ButtonThemeStyle.swift in Sources */,
-				EF51F890059204E8B4B5E0D2 /* Shared/EastmoneyMarketDataProvider.swift in Sources */,
-				64CB40C42C27092A52C21FE0 /* Shared/MarketDataProviders.swift in Sources */,
-				A175FC9EAB7DD0CB06043DD5 /* Shared/MarketModels.swift in Sources */,
-				6B51DD89A6FD2C6155226BE1 /* Shared/QuoteFormatting.swift in Sources */,
-				8D4711AC4054F43E5D625078 /* Shared/QuoteRefreshCoordinator.swift in Sources */,
-				84E515E09CE80B4D8C19FF24 /* Shared/QuoteStatus.swift in Sources */,
-				7A99523D3D188AB2C57B9EE6 /* Shared/SinaMarketDataProvider.swift in Sources */,
-				6D71FB9103ABF502577A4514 /* Shared/SnapshotStore.swift in Sources */,
-				760AB9A9DB8C8465AE30BDA8 /* Shared/SyncConfirmation.swift in Sources */,
-				1B5BED957AC32BFDE52F2B1D /* Shared/TencentMarketDataProvider.swift in Sources */,
-				9F5183649FC91625EED3CCA9 /* Shared/TradingSchedule.swift in Sources */,
-				8CAA0360DB53A5A3E1883C8E /* Shared/WatchSyncBridge.swift in Sources */,
-				08F92BEC84C1B47D7154B755 /* Shared/WatchlistBackup.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E10003635801384758CF235F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				60397645135862043E2B250A /* WatchWidgets/XPriceQuoteWidget.swift in Sources */,
-				5C5D6FD34F19B7FE0EBB9C57 /* WatchWidgets/XPriceWatchWidgets.swift in Sources */,
-				42E206B7B346627068DF7B39 /* Shared/MarketModels.swift in Sources */,
-				479686B7DA7D406F30AF3479 /* Shared/TencentMarketDataProvider.swift in Sources */,
-				28C7B46428B371A1E0881309 /* Shared/EastmoneyMarketDataProvider.swift in Sources */,
-				19C92DB8475FC6F77B69A1B1 /* Shared/SinaMarketDataProvider.swift in Sources */,
-				481F3169B2E8DBDC9633BE79 /* Shared/MarketDataProviders.swift in Sources */,
-				4195483BADEBC6E60E8C3477 /* Shared/AppSettings.swift in Sources */,
-				D56D7A03C9135A0D90E0CBAA /* Shared/SnapshotStore.swift in Sources */,
-				167894338B6ABC1A6FC4E4FC /* Shared/QuoteFormatting.swift in Sources */,
-				DF2311ED9A9E8B68C21F5217 /* Shared/TradingSchedule.swift in Sources */,
-				A56D9F47F96555DBD60614D0 /* Shared/QuoteStatus.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		8D8B5095F523C835D3FF1A87 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 02E516E7E0B11207095F41BF /* xPriceWatch */;
-			targetProxy = E8971824D03EA4310D42EC46 /* PBXContainerItemProxy */;
-		};
-		C50913F544C6D24CAAA07D73 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F8CFD2C60469E94E741A6F55 /* xPriceWatchWidgets */;
-			targetProxy = 7FAA487715F52167EE940122 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin XCBuildConfiguration section */
-		0692BE2A041D92685E2D5C00 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4371B896C7A2364450983432 /* Configuration/Local.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W2V2AK8X63;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = iOSApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_IOS_BUNDLE_ID)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		1442123EB5E54E71D4DD28F7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4371B896C7A2364450983432 /* Configuration/Local.xcconfig */;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W2V2AK8X63;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = WatchWidgets/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_WIDGET_BUNDLE_ID)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "watchos watchsimulator";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 26.0;
-			};
-			name = Debug;
-		};
-		313B3F02510B3454D0F33A93 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4371B896C7A2364450983432 /* Configuration/Local.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_NO_COMMON_BLOCKS = YES;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		6A20750AB2E7C4BCC6455906 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4371B896C7A2364450983432 /* Configuration/Local.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W2V2AK8X63;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = iOSApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_IOS_BUNDLE_ID)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		A18E5E3490047FB8DFAEC467 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4371B896C7A2364450983432 /* Configuration/Local.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				ONLY_ACTIVE_ARCH = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		A94142F2F7E59EEF4D8C43DD /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4371B896C7A2364450983432 /* Configuration/Local.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W2V2AK8X63;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = WatchApp/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_WATCH_BUNDLE_ID)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "watchos watchsimulator";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 26.0;
-			};
-			name = Release;
-		};
-		AC3688FDEF0DBEF500BE0AEF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4371B896C7A2364450983432 /* Configuration/Local.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W2V2AK8X63;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = WatchApp/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_WATCH_BUNDLE_ID)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "watchos watchsimulator";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 26.0;
-			};
-			name = Debug;
-		};
-		B0BB1C6B4C42A1CFB1866A72 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4371B896C7A2364450983432 /* Configuration/Local.xcconfig */;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = Configuration/xPrice.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W2V2AK8X63;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = WatchWidgets/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "$(XPRICE_WIDGET_BUNDLE_ID)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "watchos watchsimulator";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 26.0;
-			};
-			name = Release;
-		};
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		1CCA7B0C798AE522B7FA8061 /* Build configuration list for PBXNativeTarget "xPriceWatch" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AC3688FDEF0DBEF500BE0AEF /* Debug */,
-				A94142F2F7E59EEF4D8C43DD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		5933565277C72F71D9A0BC98 /* Build configuration list for PBXProject "xPrice" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A18E5E3490047FB8DFAEC467 /* Debug */,
-				313B3F02510B3454D0F33A93 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		64334594F46795DBDF377FCD /* Build configuration list for PBXNativeTarget "xPrice" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0692BE2A041D92685E2D5C00 /* Debug */,
-				6A20750AB2E7C4BCC6455906 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6E90792FFF6F9B4EC2D4C84E /* Build configuration list for PBXNativeTarget "xPriceWatchWidgets" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1442123EB5E54E71D4DD28F7 /* Debug */,
-				B0BB1C6B4C42A1CFB1866A72 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-/* End XCConfigurationList section */
 	};
-	rootObject = 8F100F4EEC2C04E5D2E9D925 /* Project object */;
+	rootObject = 8F100F4EEC2C04E5D2E9D925;
 }

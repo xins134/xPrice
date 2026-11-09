@@ -60,7 +60,7 @@ public struct SinaMarketDataProvider: MarketDataProviding {
         // an ampersand in a user's query cannot become another path parameter.
         let safeCharacters = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
         guard let encoded = query.addingPercentEncoding(withAllowedCharacters: safeCharacters),
-              let url = URL(string: "https://suggest3.sinajs.cn/suggest/type=11,12,13,14,15&key=\(encoded)&name=suggestvalue") else {
+              let url = URL(string: "https://suggest3.sinajs.cn/suggest/type=11,12,13,14,15,81&key=\(encoded)&name=suggestvalue") else {
             throw MarketDataError.invalidQuery
         }
         return try Self.parseSearchResults(TencentMarketDataProvider.decodePayload(try await load(url)))
@@ -129,11 +129,14 @@ public struct SinaMarketDataProvider: MarketDataProviding {
         var seen = Set<String>()
         return value.components(separatedBy: ";").compactMap { row in
             let fields = row.components(separatedBy: ",")
-            guard fields.count >= 5, ["11", "13", "15"].contains(fields[1]) else { return nil }
+            // Type 81 covers exchange-traded bonds; the symbol classifier
+            // admits convertible bonds and excludes other debt categories.
+            guard fields.count >= 5, ["11", "13", "15", "81"].contains(fields[1]) else { return nil }
             let symbol = fields[3].lowercased()
             let name = fields[4].trimmingCharacters(in: .whitespacesAndNewlines)
             guard fields[2] == String(symbol.dropFirst(2)), !name.isEmpty,
                   let kind = TencentMarketDataProvider.kind(for: symbol, name: name),
+                  fields[1] != "81" || kind == .convertibleBond,
                   seen.insert(symbol).inserted else { return nil }
             return Instrument(symbol: symbol, name: name, kind: kind)
         }

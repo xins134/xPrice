@@ -56,6 +56,62 @@ struct EastmoneyMarketDataTests {
         }
     }
 
+    @Test func convertibleQuotesPreserveThreeDecimalPricesAndExchangeIDs() throws {
+        let requested = [
+            Instrument(symbol: "sh113052", name: "合成沪转债", kind: .convertibleBond),
+            Instrument(symbol: "sh118003", name: "合成科创转债", kind: .convertibleBond),
+            Instrument(symbol: "sz127045", name: "合成深转债", kind: .convertibleBond)
+        ]
+        let rows = [
+            eastmoneySyntheticRow("0.127045", name: "合成深转债", price: "120.123", close: "120.000", percent: "0.10"),
+            eastmoneySyntheticRow("1.118003", name: "合成科创转债", price: "130.001", close: "130.000", percent: "0.00"),
+            eastmoneySyntheticRow("1.113052", name: "合成沪转债", price: "113.052", close: "113.051", percent: "0.00")
+        ]
+        let quotes = try EastmoneyMarketDataProvider.parseQuotes(
+            eastmoneySyntheticEnvelope(rows), requested: requested, fetchedAt: receivedAt
+        )
+        #expect(quotes.map(\.symbol) == requested.map(\.symbol))
+        #expect(quotes.map(\.price) == [Decimal(string: "113.052")!, Decimal(string: "130.001")!, Decimal(string: "120.123")!])
+        #expect(quotes[0].change == Decimal(string: "0.001"))
+        #expect(quotes[2].changePercent == Decimal(string: "0.10"))
+        #expect(quotes.allSatisfy { $0.source == .eastmoney && $0.timestamp == receivedAt })
+        #expect(EastmoneyMarketDataProvider.securityID(for: "sh113052") == "1.113052")
+        #expect(EastmoneyMarketDataProvider.securityID(for: "sz127045") == "0.127045")
+        #expect(EastmoneyMarketDataProvider.securityID(for: "sh111001") == nil)
+    }
+
+    @Test func convertibleCodeSearchConfirmsNamesForBareAndExplicitMarketCodes() async throws {
+        let provider = EastmoneyMarketDataProvider(session: eastmoneyStubSession())
+        for (query, symbol, id) in [("113052", "sh113052", "1.113052"), ("118003.SH", "sh118003", "1.118003"),
+                                     ("SZ127045", "sz127045", "0.127045")] {
+            EastmoneyStubURLProtocol.state.install { request in
+                #expect(request.url?.host == "push2.eastmoney.com")
+                #expect(eastmoneyQueryItems(request)["secids"] == id)
+                #expect(eastmoneyQueryItems(request)["fltt"] == "2")
+                return .response(status: 200, data: try eastmoneySyntheticEnvelope([
+                    eastmoneySyntheticRow(id, name: "合成转债", price: "113.052", close: "113.051")
+                ]))
+            }
+            #expect(try await provider.search(query) == [Instrument(symbol: symbol, name: "合成转债", kind: .convertibleBond)])
+            #expect(EastmoneyStubURLProtocol.state.requests.count == 1)
+        }
+    }
+
+    @Test func convertibleNameSearchRetainsTypeAndFiltersOtherBonds() async throws {
+        let payload = Data(#"{"QuotationCodeTable":{"Status":0,"Data":[{"Code":"113052","Name":"合成沪转债","QuoteID":"1.113052","Classify":"Bond","SecurityType":"21"},{"Code":"127045","Name":"合成深转债","QuoteID":"0.127045","Classify":"Bond","SecurityType":"16"},{"Code":"111001","Name":"合成可交换债","QuoteID":"1.111001","Classify":"Bond"},{"Code":"019001","Name":"合成国债","QuoteID":"1.019001","Classify":"Bond"},{"Code":"113052","Name":"重复沪转债","QuoteID":"1.113052"}]}}"#.utf8)
+        EastmoneyStubURLProtocol.state.install { request in
+            #expect(request.url?.host == "searchapi.eastmoney.com")
+            #expect(eastmoneyQueryItems(request)["input"] == "合成转债")
+            #expect(eastmoneyQueryItems(request)["type"] == "14")
+            return .response(status: 200, data: payload)
+        }
+        let provider = EastmoneyMarketDataProvider(session: eastmoneyStubSession())
+        #expect(try await provider.search("合成转债") == [
+            Instrument(symbol: "sh113052", name: "合成沪转债", kind: .convertibleBond),
+            Instrument(symbol: "sz127045", name: "合成深转债", kind: .convertibleBond)
+        ])
+    }
+
     @Test func rejectsMalformedAndErrorEnvelopesAndDoesNotReplaceTimeWithFetchTime() throws {
         let requested = [Instrument(symbol: "sh600519", name: "合成股票")]
         for payload in ["<html>Service unavailable</html>", "{}", #"{"rc":1,"data":{"diff":[]}}"#, #"{"rc":0,"data":{}}"#] {

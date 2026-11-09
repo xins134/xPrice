@@ -1,10 +1,10 @@
 import SwiftUI
 
 extension ButtonTheme {
-    /// Button tint is separate from QuoteRed / QuoteGreen and never feeds QuoteColor.
+    /// Control tint is separate from QuoteRed / QuoteGreen and never feeds QuoteColor.
     var color: Color {
         switch self {
-        case .teal: Color.accentColor
+        case .teal: Color("AccentColor", bundle: .main)
         case .blue: Color("ButtonBlue", bundle: .main)
         case .purple: Color("ButtonPurple", bundle: .main)
         case .orange: Color("ButtonOrange", bundle: .main)

@@ -3,7 +3,7 @@ import SwiftUI
 
 public enum QuoteFormatting {
     private static let stockPriceFormatter = priceFormatter(digits: 2)
-    private static let fundPriceFormatter = priceFormatter(digits: 3)
+    private static let threeDecimalPriceFormatter = priceFormatter(digits: 3)
     private static let percentFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -27,7 +27,7 @@ public enum QuoteFormatting {
         let formatter: NumberFormatter
         switch kind {
         case .stock, .index: formatter = stockPriceFormatter
-        case .etf, .lof, .fund: formatter = fundPriceFormatter
+        case .etf, .lof, .fund, .convertibleBond: formatter = threeDecimalPriceFormatter
         }
         return formatter.string(from: value as NSDecimalNumber) ?? "—"
     }

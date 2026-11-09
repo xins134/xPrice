@@ -58,24 +58,22 @@ struct MarketDataTests {
         }
     }
 
-    @Test func parsesHintAssignmentWithPlainNamesAndCaretSeparatedRows() throws {
-        let hint = #"v_hint="sh~600519~贵州茅台~gzmt~GP-A^sh~510300~300ETF~300etf~ETF^sz~161725~白酒LOF~bjlof~LOF";"#
-        for prefix in ["", #"v_other="ignored"; "#] {
-            let result = try TencentMarketDataProvider.parseSearchResults(prefix + hint)
-            #expect(result.map(\.symbol) == ["sh600519", "sh510300", "sz161725"])
-            #expect(result.map(\.name) == ["贵州茅台", "300ETF", "白酒LOF"])
-            #expect(result.map(\.kind) == [.stock, .etf, .lof])
-        }
-        #expect(try TencentMarketDataProvider.parseSearchResults(#"v_hint="";"#).isEmpty)
+    @Test func parsesWebsiteSearchStockAndFundTablesWithoutDuplicates() throws {
+        let payload = #"{"stock":[{"code":"sh600519","name":"贵州茅台"},{"code":"sh510300","name":"300ETF"}],"fund":[{"code":"sh510300","name":"重复ETF"},{"code":"sz161725","name":"白酒LOF"}]}"#
+        let result = try TencentMarketDataProvider.parseSearchResults(payload)
+        #expect(result.map(\.symbol) == ["sh600519", "sh510300", "sz161725"])
+        #expect(result.map(\.name) == ["贵州茅台", "300ETF", "白酒LOF"])
+        #expect(result.map(\.kind) == [.stock, .etf, .lof])
+        #expect(try TencentMarketDataProvider.parseSearchResults(#"{"stock":[],"fund":[]}"#).isEmpty)
     }
 
     @Test func nameSearchDecodesUnicodeAndFiltersOtherMarketsAndDuplicates() throws {
-        let payload = #"v_hint="sh~600519~\u8d35\u5dde\u8305\u53f0~gzmt~GP-A^sh~510300~300ETF~300etf~ETF^sz~161725~白酒LOF~bjlof~LOF^sh~000001~上证指数~szzs~ZS^sz~000001~平安银行~payh~GP-A^sz~399001~深证成指~szcz~ZS^hk~00700~腾讯控股~txkg~GP-HK^sh~600519~贵州茅台~gzmt~GP-A^sh~000001~上证指数~szzs~ZS";"#
+        let payload = #"{"stock":[{"code":"sh600519","name":"\u8d35\u5dde\u8305\u53f0"},{"code":"sh510300","name":"300ETF"},{"code":"sz161725","name":"白酒LOF"},{"code":"sh000001","name":"上证指数"},{"code":"sz000001","name":"平安银行"},{"code":"sz399001","name":"深证成指"},{"code":"hk00700","name":"腾讯控股"},{"code":"sh600519","name":"重复股票"},{"code":"sh000001","name":"重复指数"},{"code":123,"name":"错码"},{"code":"sh600000","name":null}]}"#
         let result = try TencentMarketDataProvider.parseSearchResults(payload)
         #expect(result.map(\.symbol) == ["sh600519", "sh510300", "sz161725", "sh000001", "sz000001", "sz399001"])
         #expect(result.map(\.kind) == [.stock, .etf, .lof, .index, .stock, .index])
         #expect(result.first?.name == "贵州茅台")
-        #expect(try TencentMarketDataProvider.parseSearchResults(#"v_hint="~";"#).isEmpty)
+        #expect(try TencentMarketDataProvider.parseSearchResults(#"{"stock":[{}]}"#).isEmpty)
     }
 
     @Test func rejectsMissingFieldsZerosInvalidNumbersAndMismatchedCodes() throws {
@@ -179,11 +177,12 @@ struct MarketDataTests {
 
     @Test func indexNameSearchUsesSearchEndpointAndRetainsIndexCategory() async throws {
         StubURLProtocol.state.install { request in
-            #expect(request.url?.host == "smartbox.gtimg.cn")
+            #expect(request.url?.host == "proxy.finance.qq.com")
+            #expect(request.url?.path == "/cgi/cgi-bin/smartbox/search")
             let url = try #require(request.url)
             let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
-            #expect(components.queryItems?.first(where: { $0.name == "q" })?.value == "上证指数")
-            return .response(status: 200, data: Data(#"v_hint="sh~000001~上证指数~szzs~ZS";"#.utf8))
+            #expect(components.queryItems?.first(where: { $0.name == "query" })?.value == "上证指数")
+            return .response(status: 200, data: Data(#"{"stock":[{"code":"sh000001","name":"上证指数","type":"ZS"}]}"#.utf8))
         }
         let provider = TencentMarketDataProvider(session: makeStubSession())
         #expect(try await provider.search("上证指数") == [Instrument(symbol: "sh000001", name: "上证指数", kind: .index)])
@@ -279,7 +278,7 @@ struct MarketDataTests {
 
     @Test func searchFailureDoesNotPreventSubsequentCompleteCodeLookup() async throws {
         StubURLProtocol.state.install { request in
-            if request.url?.host == "smartbox.gtimg.cn" { return .response(status: 503, data: Data()) }
+            if request.url?.host == "proxy.finance.qq.com" { return .response(status: 503, data: Data()) }
             return .response(status: 200, data: Data(syntheticQuote(symbol: "sh510300", name: "300ETF", price: "3.85", close: "3.80", percent: "1.32").utf8))
         }
         let provider = TencentMarketDataProvider(session: makeStubSession())
@@ -293,7 +292,74 @@ struct MarketDataTests {
         #expect(throws: MarketDataError.invalidResponse) { try TencentMarketDataProvider.decodePayload(Data()) }
         #expect(throws: MarketDataError.invalidEncoding) { try TencentMarketDataProvider.decodePayload(Data([0xFF, 0xFF])) }
         #expect(throws: MarketDataError.invalidResponse) { try TencentMarketDataProvider.parseSearchResults("<html>Unavailable</html>") }
-        #expect(throws: MarketDataError.invalidResponse) { try TencentMarketDataProvider.parseSearchResults(#"v_hint="\uZZZZ";"#) }
+        for payload in [#"{"stock":[{"code":"sh600519","name":"\uZZZZ"}]}"#, #"{"fund":[]}"#, #"{"stock":null}"#, #"{"stock":{}}"#] {
+            #expect(throws: MarketDataError.invalidResponse) { try TencentMarketDataProvider.parseSearchResults(payload) }
+        }
+    }
+
+    @Test func recognizesConvertibleTradingCodesAndRejectsOtherDebtAndSubscriptionCodes() {
+        let symbols = ["sh110059", "sh113052", "sh118003", "sz123189", "sz127045", "sz128138"]
+        for symbol in symbols {
+            #expect(TencentMarketDataProvider.kind(for: symbol) == .convertibleBond)
+            let code = String(symbol.dropFirst(2))
+            #expect(TencentMarketDataProvider.completeSymbols(from: code) == [symbol])
+            #expect(TencentMarketDataProvider.completeSymbols(from: symbol.uppercased()) == [symbol])
+            #expect(TencentMarketDataProvider.completeSymbols(from: code + "." + symbol.prefix(2).uppercased()) == [symbol])
+        }
+        for symbol in ["sh111001", "sh132001", "sh019001", "sh070059", "sh733052", "sh718003", "sz083189", "sz072714", "sz080002", "sz110059", "sh123189", "bj113052"] {
+            #expect(TencentMarketDataProvider.kind(for: symbol, name: "合成转债") == nil)
+        }
+    }
+
+    @Test func convertibleNameSearchIncludesPartialMatchesAndFiltersOtherBonds() async throws {
+        StubURLProtocol.state.install { request in
+            #expect(request.url?.host == "proxy.finance.qq.com")
+            let url = try #require(request.url)
+            let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+            let queryItems = try #require(components.queryItems)
+            let items = Dictionary(queryItems.map { ($0.name, $0.value ?? "") }, uniquingKeysWith: { first, _ in first })
+            #expect(items["query"] == "兴业")
+            #expect(items["stockFlag"] == "1")
+            #expect(items["fundFlag"] == "1")
+            return .response(status: 200, data: Data(#"{"stock":[{"code":"sh601166","name":"兴业银行","type":"GP-A"},{"code":"sh113052","name":"兴业转债","type":"ZQ-KZZ"},{"code":"sz127045","name":"合成转债","type":"ZQ-KZZ"},{"code":"sh111001","name":"合成交换债","type":"ZQ"},{"code":"sh733052","name":"合成申购","type":"ZQ"}],"fund":[{"code":"sh113052","name":"重复转债"}]}"#.utf8))
+        }
+        let result = try await TencentMarketDataProvider(session: makeStubSession()).search("兴业")
+        #expect(result.map(\.symbol) == ["sh601166", "sh113052", "sz127045"])
+        #expect(result.map(\.kind) == [.stock, .convertibleBond, .convertibleBond])
+        #expect(StubURLProtocol.state.requests.count == 1)
+    }
+
+    @Test func convertibleCodeSearchConfirmsQuoteAndPreservesThreeDecimalChange() async throws {
+        let instruments = [
+            Instrument(symbol: "sh113052", name: "合成沪转债", kind: .convertibleBond),
+            Instrument(symbol: "sz127045", name: "合成深转债", kind: .convertibleBond)
+        ]
+        let provider = TencentMarketDataProvider(session: makeStubSession())
+        for instrument in instruments {
+            for query in [instrument.code, instrument.symbol.uppercased(), instrument.code + "." + instrument.symbol.prefix(2).uppercased()] {
+                StubURLProtocol.state.install { request in
+                    #expect(request.url?.host == "qt.gtimg.cn")
+                    #expect(request.url?.path == "/q=\(instrument.symbol)")
+                    return .response(status: 200, data: Data(syntheticQuote(symbol: instrument.symbol, name: instrument.name, price: "123.457", close: "123.456", percent: "0.00").utf8))
+                }
+                #expect(try await provider.search(query) == [instrument])
+                #expect(StubURLProtocol.state.requests.count == 1)
+            }
+        }
+        let payload = instruments.map { syntheticQuote(symbol: $0.symbol, name: $0.name, price: "123.457", close: "123.456", percent: "0.00") }.joined()
+        let quotes = try TencentMarketDataProvider.parseQuotes(payload, requested: instruments, fetchedAt: receivedAt)
+        #expect(quotes.map(\.symbol) == instruments.map(\.symbol))
+        #expect(quotes.allSatisfy { $0.price == Decimal(string: "123.457") && $0.change == Decimal(string: "0.001") && $0.source == .tencent })
+    }
+
+    @Test func convertibleDisplayPreservesPriceAndChangeTickAcrossScreens() {
+        #expect(InstrumentKind.convertibleBond.displayName == "可转债")
+        #expect(QuoteFormatting.price(Decimal(string: "123.457")!, kind: .convertibleBond) == "123.457")
+        #expect(QuoteFormatting.price(123, kind: .convertibleBond) == "123.000")
+        #expect(QuoteFormatting.signedPrice(Decimal(string: "0.001")!, kind: .convertibleBond) == "+0.001")
+        #expect(QuoteFormatting.signedPrice(Decimal(string: "-0.001")!, kind: .convertibleBond) == "-0.001")
+        #expect(QuoteFormatting.price(Decimal(string: "123.457")!, kind: .stock) == "123.46")
+        #expect(QuoteFormatting.price(Decimal(string: "3.851")!, kind: .etf) == "3.851")
     }
 
     @Test func recognizesExplicitExchangesAndRejectsOutOfScopeCodes() {

@@ -39,7 +39,7 @@ struct ClosedDatesView: View {
                 }
             }
         }
-        .tint(.accentColor)
+        .tint(store.settings.buttonTheme.color)
         .environment(\.timeZone, TimeZone(identifier: "Asia/Shanghai")!)
         .navigationTitle("休市日期")
         .navigationBarTitleDisplayMode(.inline)

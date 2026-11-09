@@ -9,7 +9,8 @@ struct XPriceApp: App {
         WindowGroup {
             WatchlistView()
                 .environmentObject(store)
-                .tint(.accentColor)
+                .tint(store.settings.buttonTheme.color)
+                .appFontSize(store.settings.fontSize)
                 .preferredColorScheme(store.settings.phoneAppearance.preferredColorScheme)
                 .onChange(of: scenePhase, initial: true) { _, phase in
                     store.setActive(phase == .active)

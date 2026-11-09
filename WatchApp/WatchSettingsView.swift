@@ -7,6 +7,14 @@ struct WatchSettingsView: View {
         NavigationStack {
             Form {
                 Section {
+                    Picker("字体大小", selection: Binding(
+                        get: { store.settings.fontSize },
+                        set: { size in store.updateSettings { $0.fontSize = size } }
+                    )) {
+                        ForEach(AppFontSize.allCases, id: \.self) { size in
+                            Text(size.displayName).tag(size)
+                        }
+                    }
                     Picker("主题色", selection: Binding(
                         get: { store.settings.buttonTheme },
                         set: { theme in store.updateSettings { $0.buttonTheme = theme } }
@@ -25,7 +33,7 @@ struct WatchSettingsView: View {
                 } header: {
                     Text("界面外观")
                 } footer: {
-                    Text("主题色仅用于按钮，涨跌颜色单独设置。")
+                    Text("字体默认较小，调整后同步到 iPhone。按钮、开关等控件跟随主题色，涨跌颜色单独设置。")
                 }
 
                 Section {
@@ -96,7 +104,7 @@ struct WatchSettingsView: View {
                         .tint(store.settings.buttonTheme.color)
                 }
             }
-            .tint(.accentColor)
+            .tint(store.settings.buttonTheme.color)
             .navigationTitle("设置")
         }
     }

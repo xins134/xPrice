@@ -75,7 +75,7 @@ struct WatchlistBackupView: View {
 
     private var fileScreen: some View {
         contentForm
-            .tint(.accentColor)
+            .tint(store.settings.buttonTheme.color)
             .navigationTitle("自选备份")
             .navigationBarTitleDisplayMode(.inline)
             .fileExporter(isPresented: $ui.showsExporter, document: ui.document, contentType: .json,

@@ -68,9 +68,17 @@ public struct TencentMarketDataProvider: MarketDataProviding {
 
         var components = URLComponents()
         components.scheme = "https"
-        components.host = "smartbox.gtimg.cn"
-        components.path = "/s3/"
-        components.queryItems = [URLQueryItem(name: "q", value: query), URLQueryItem(name: "t", value: "all")]
+        // Tencent's current website search includes convertible bonds, which
+        // the older smartbox.gtimg.cn endpoint omits even for exact names.
+        components.host = "proxy.finance.qq.com"
+        components.path = "/cgi/cgi-bin/smartbox/search"
+        components.queryItems = [
+            URLQueryItem(name: "stockFlag", value: "1"),
+            URLQueryItem(name: "fundFlag", value: "1"),
+            URLQueryItem(name: "app", value: "official_website"),
+            URLQueryItem(name: "c", value: "1"),
+            URLQueryItem(name: "query", value: query)
+        ]
         guard let url = components.url else { throw MarketDataError.invalidQuery }
         return try Self.parseSearchResults(Self.decodePayload(try await load(url)))
     }
@@ -140,24 +148,38 @@ public struct TencentMarketDataProvider: MarketDataProviding {
     }
 
     static func parseSearchResults(_ payload: String) throws -> [Instrument] {
-        let pattern = #"(?m)(?:^|(?<=;))\s*v_(?:hint|suggest)\s*=\s*"((?:\\.|[^"\\])*)"\s*;?"#
-        let regex = try NSRegularExpression(pattern: pattern)
-        let range = NSRange(payload.startIndex..<payload.endIndex, in: payload)
-        guard let match = regex.firstMatch(in: payload, range: range),
-              let valueRange = Range(match.range(at: 1), in: payload),
-              let value = decodeJavaScriptString(String(payload[valueRange])) else {
-            throw MarketDataError.invalidResponse
-        }
+        let envelope: SearchEnvelope
+        do { envelope = try JSONDecoder().decode(SearchEnvelope.self, from: Data(payload.utf8)) }
+        catch { throw MarketDataError.invalidResponse }
         var seen = Set<String>()
-        return value.components(separatedBy: "^").compactMap { row in
-            let fields = row.components(separatedBy: "~")
-            guard fields.count >= 3 else { return nil }
-            let symbol = fields[0].lowercased() + fields[1]
-            let name = fields[2].trimmingCharacters(in: .whitespacesAndNewlines)
+        return (envelope.stock + (envelope.fund ?? [])).compactMap { row in
+            guard let code = row.code, let rawName = row.name else { return nil }
+            let symbol = code.lowercased()
+            let name = rawName.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !name.isEmpty, let category = kind(for: symbol, name: name),
                   seen.insert(symbol).inserted else { return nil }
             return Instrument(symbol: symbol, name: name, kind: category)
         }
+    }
+
+    private struct SearchEnvelope: Decodable {
+        let stock: [SearchRow]
+        let fund: [SearchRow]?
+    }
+
+    private struct SearchRow: Decodable {
+        let code: String?
+        let name: String?
+
+        init(from decoder: Decoder) throws {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            do { code = try values.decodeIfPresent(String.self, forKey: .code) }
+            catch DecodingError.typeMismatch(_, _) { code = nil }
+            do { name = try values.decodeIfPresent(String.self, forKey: .name) }
+            catch DecodingError.typeMismatch(_, _) { name = nil }
+        }
+
+        private enum CodingKeys: String, CodingKey { case code, name }
     }
 
     static func completeSymbols(from input: String) -> [String]? {
@@ -178,6 +200,11 @@ public struct TencentMarketDataProvider: MarketDataProviding {
             || (exchange == "sz" && code.hasPrefix("399"))
             || (exchange == "bj" && code.hasPrefix("899"))
         if isIndex { return .index }
+        // Exchange-traded convertible bonds only: subscription/allotment codes,
+        // ordinary bonds and Shanghai 111 exchangeable bonds stay out of scope.
+        let isConvertibleBond = (exchange == "sh" && ["110", "113", "118"].contains { code.hasPrefix($0) })
+            || (exchange == "sz" && ["123", "127", "128"].contains { code.hasPrefix($0) })
+        if isConvertibleBond { return .convertibleBond }
         let isStock: Bool
         switch exchange {
         case "sh": isStock = ["600", "601", "603", "605", "688", "689"].contains { code.hasPrefix($0) }

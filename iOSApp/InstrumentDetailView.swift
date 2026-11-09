@@ -2,10 +2,14 @@ import SwiftUI
 
 struct InstrumentDetailView: View {
     @EnvironmentObject private var store: AppStore
+    @Environment(\.openURL) private var openURL
+    @State private var isEastmoneyUnavailable = false
     let instrument: Instrument
+    let onScreenOff: () -> Void
 
     var body: some View {
         let quote = store.quote(for: instrument)
+        let eastmoneyLink = eastmoneyURL
         let status = QuoteStatus.evaluate(quote: quote, selectedSource: store.settings.marketDataSource,
                                           session: store.tradingSession, requestFailed: store.quoteFailures.contains(instrument.symbol))
         List {
@@ -14,6 +18,7 @@ struct InstrumentDetailView: View {
                     Text("\(instrument.marketLabel) \(instrument.code) · \(instrument.kind.displayName) · 人民币")
                         .font(.subheadline.monospacedDigit())
                         .foregroundStyle(.secondary)
+                        .padding(.trailing, eastmoneyLink == nil ? 0 : 52)
                     if let quote {
                         let changeText = QuoteFormatting.signedPrice(quote.change, kind: instrument.kind)
                         let percentText = QuoteFormatting.percent(quote.changePercent)
@@ -37,7 +42,25 @@ struct InstrumentDetailView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 16)
+                .overlay(alignment: .topTrailing) {
+                    if let url = eastmoneyLink {
+                        Button {
+                            openURL(url) { accepted in
+                                isEastmoneyUnavailable = !accepted
+                            }
+                        } label: {
+                            Label("在东方财富查看", systemImage: "arrow.up.right.square")
+                                .labelStyle(.iconOnly)
+                                .font(.title3)
+                                .frame(minWidth: 44, minHeight: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.borderless)
+                        .tint(store.settings.buttonTheme.color)
+                    }
+                }
             }
 
             if let quote {
@@ -52,6 +75,22 @@ struct InstrumentDetailView: View {
                 }
                 .monospacedDigit()
                 .font(.subheadline)
+            }
+
+            if store.watchlist.contains(where: { $0.symbol == instrument.symbol }) {
+                Section {
+                    Toggle("显示在熄屏行情", isOn: Binding(
+                        get: { store.isScreenOffSelected(instrument) },
+                        set: { selected in
+                            store.setScreenOffSelected(selected, for: instrument)
+                        }
+                    ))
+                    .tint(store.settings.buttonTheme.color)
+                } header: {
+                    Text("熄屏行情 · 已选 \(store.screenOffInstruments.count) 只")
+                } footer: {
+                    Text("按自选顺序在底部显示涨跌幅，每行最多 4 个，可多行显示。单击其他区域立即隐藏或再次显示行情；隐藏时暂停刷新，重新显示时立即更新。切后台保留页面，点击底部行情区域返回首页。")
+                }
             }
 
             Section {
@@ -86,7 +125,39 @@ struct InstrumentDetailView: View {
         }
         .navigationTitle(instrument.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("熄屏", systemImage: "moon.zzz", action: onScreenOff)
+                    .labelStyle(.iconOnly)
+                    .tint(store.settings.buttonTheme.color)
+                    .accessibilityIdentifier("detail.screenOff")
+            }
+        }
         .refreshable { await store.refresh() }
+        .alert("无法打开东方财富", isPresented: $isEastmoneyUnavailable) {
+            Button("好", role: .cancel) {}
+        } message: {
+            Text("请确认已安装东方财富 App，然后重试。")
+        }
+    }
+
+    private var eastmoneyURL: URL? {
+        let market: String
+        switch instrument.symbol.prefix(2) {
+        case "sh": market = "1"
+        case "sz", "bj": market = "0"
+        default: return nil
+        }
+        guard instrument.code.range(of: #"^[0-9]{6}$"#, options: .regularExpression) != nil else { return nil }
+        var components = URLComponents()
+        components.scheme = "eastmoney"
+        components.host = "page"
+        components.path = "/stockpage"
+        components.queryItems = [
+            URLQueryItem(name: "code", value: instrument.code),
+            URLQueryItem(name: "market", value: market)
+        ]
+        return components.url
     }
 
     private func change(_ text: String) -> some View {

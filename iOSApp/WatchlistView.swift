@@ -8,6 +8,10 @@ private final class WatchlistScreenState: ObservableObject {
     @Published var showingOverviewSearch = false
     @Published var showingOverviewManager = false
     @Published var showingSettings = false
+    @Published var showingScreenOff = false
+    @Published var screenOffInstrument: Instrument?
+    @Published var screenOffBlocksHome = false
+    @Published var showingScreenOffSetup = false
     @Published var path: [Instrument] = []
 }
 
@@ -15,6 +19,7 @@ struct WatchlistView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.colorScheme) private var colorScheme
+    @ScaledMetric(relativeTo: .caption) private var scaledOverviewHeight: CGFloat = 88
     @StateObject private var ui = WatchlistScreenState()
 
     var body: some View {
@@ -28,23 +33,82 @@ struct WatchlistView: View {
                         .tint(store.settings.buttonTheme.color)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button("一键熄屏", systemImage: "moon.zzz") {
+                        presentScreenOff()
+                    }
+                    .labelStyle(.iconOnly)
+                    .tint(store.settings.buttonTheme.color)
+                    .accessibilityIdentifier("home.screenOff")
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("添加自选", systemImage: "plus") { ui.showingSearch = true }
                         .labelStyle(.iconOnly)
                         .tint(store.settings.buttonTheme.color)
                 }
             }
             .navigationDestination(for: Instrument.self) { instrument in
-                InstrumentDetailView(instrument: instrument)
+                InstrumentDetailView(instrument: instrument) {
+                    presentScreenOff(instrument: instrument)
+                }
             }
             .sheet(isPresented: $ui.showingSearch) { StockSearchView() }
             .sheet(isPresented: $ui.showingOverviewSearch) { StockSearchView(destination: .overview) }
             .sheet(isPresented: $ui.showingOverviewManager) { OverviewManagementView() }
             .sheet(isPresented: $ui.showingSettings) { SettingsView() }
+            .alert("先选择熄屏行情", isPresented: $ui.showingScreenOffSetup) {
+                Button("好", role: .cancel) {}
+            } message: {
+                Text("在自选详情中开启“显示在熄屏行情”，每行最多显示 4 个涨跌幅，超过后多行显示。点击底部行情区域返回首页，点击其他区域立即隐藏行情，再次点击重新显示；隐藏后仍可点击原底部区域返回。")
+            }
             .onOpenURL { url in
                 guard url.scheme == "xprice", url.host == "quote",
                       let instrument = (store.watchlist + store.overviewInstruments)
                         .first(where: { $0.symbol == url.lastPathComponent }) else { return }
                 ui.path = [instrument]
+            }
+        }
+        .allowsHitTesting(!ui.screenOffBlocksHome)
+        .accessibilityHidden(ui.screenOffBlocksHome)
+        .overlay {
+            if ui.showingScreenOff {
+                ScreenOffQuoteView(store: store, instrument: ui.screenOffInstrument) {
+                    dismissScreenOff()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .ignoresSafeArea()
+                .transition(.opacity)
+            }
+        }
+        .statusBarHidden(ui.screenOffBlocksHome)
+        .persistentSystemOverlays(ui.screenOffBlocksHome ? .hidden : .automatic)
+    }
+
+    private func presentScreenOff(instrument: Instrument? = nil) {
+        guard instrument != nil || !store.screenOffInstruments.isEmpty else {
+            ui.showingScreenOffSetup = true
+            return
+        }
+        ui.screenOffInstrument = instrument
+        ui.screenOffBlocksHome = true
+        withAnimation(.easeInOut(duration: 0.2)) {
+            ui.showingScreenOff = true
+        }
+    }
+
+    private func dismissScreenOff() {
+        var transaction = Transaction(animation: nil)
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            ui.path.removeAll()
+        }
+        guard ui.showingScreenOff else { return }
+        withAnimation(.easeInOut(duration: 0.2), completionCriteria: .removed) {
+            ui.showingScreenOff = false
+        } completion: {
+            // Keep the homepage inactive until the fading screen is removed.
+            if !ui.showingScreenOff {
+                ui.screenOffBlocksHome = false
+                ui.screenOffInstrument = nil
             }
         }
     }
@@ -59,7 +123,7 @@ struct WatchlistView: View {
                 Text("关心的价格，一眼看到")
                     .font(.headline)
                     .multilineTextAlignment(.center)
-                Text("添加 A 股、指数、ETF 或 LOF，\n在 iPhone 和 Apple Watch 查看行情。")
+                Text("添加 A 股、指数、ETF、LOF 或可转债，\n在 iPhone 和 Apple Watch 查看行情。")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -165,6 +229,7 @@ struct WatchlistView: View {
                 Spacer(minLength: 0)
                 Button("管理") { ui.showingOverviewManager = true }
                     .tint(store.settings.buttonTheme.color)
+                    .foregroundStyle(.tint)
                     .frame(minWidth: 44, minHeight: 44)
                     .accessibilityLabel("管理行情栏")
             }
@@ -181,7 +246,7 @@ struct WatchlistView: View {
                             .font(.title2)
                             .foregroundStyle(store.settings.buttonTheme.color)
                             .accessibilityHidden(true)
-                        Text("添加指数或个股")
+                        Text("添加证券")
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(store.settings.buttonTheme.color)
                         Text("左右滑动查看多个行情")
@@ -209,12 +274,12 @@ struct WatchlistView: View {
                                 remove: { store.removeFromOverview(instrument) }
                             )
                             .containerRelativeFrame(.horizontal, count: 3, spacing: 8)
-                            .frame(height: typeSize.isAccessibilitySize ? 160 : 88)
+                            .frame(height: overviewHeight)
                         }
                     }
                 }
                 .scrollIndicators(.hidden)
-                .frame(height: typeSize.isAccessibilitySize ? 160 : 88)
+                .frame(height: overviewHeight)
             }
         }
     }
@@ -247,6 +312,10 @@ struct WatchlistView: View {
             }
         }
     }
+
+    private var overviewHeight: CGFloat {
+        max(typeSize.isAccessibilitySize ? 160 : 88, scaledOverviewHeight)
+    }
 }
 
 // Give each card its own native interaction; the list header shares a SwiftUI menu host.
@@ -262,10 +331,6 @@ private struct OverviewQuoteControl: UIViewRepresentable {
     let moveLater: () -> Void
     let remove: () -> Void
 
-    private var card: OverviewQuoteCard {
-        OverviewQuoteCard(instrument: instrument, quote: quote, colorConvention: colorConvention)
-    }
-
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
 
     func makeUIView(context: Context) -> OverviewQuoteControlView {
@@ -279,7 +344,9 @@ private struct OverviewQuoteControl: UIViewRepresentable {
 
     func updateUIView(_ view: OverviewQuoteControlView, context: Context) {
         context.coordinator.parent = self
-        view.update(card: card)
+        view.update(card: OverviewQuoteCard(instrument: instrument, quote: quote,
+                                           colorConvention: colorConvention,
+                                           typeSize: context.environment.dynamicTypeSize))
         view.tintColor = UIColor(tint)
         view.accessibilityLabel = [instrument.name, quote.map { QuoteFormatting.price($0.price, kind: instrument.kind) },
                                    quote.map { QuoteFormatting.percent($0.changePercent) } ?? "等待行情"]
@@ -434,7 +501,9 @@ private final class OverviewQuoteControlView: UIControl {
     func update(card: OverviewQuoteCard) {
         guard currentCard != card else { return }
         currentCard = card
-        let configuration = UIHostingConfiguration { card.equatable() }.margins(.all, 0)
+        let configuration = UIHostingConfiguration {
+            card.equatable().dynamicTypeSize(card.typeSize)
+        }.margins(.all, 0)
         if let contentView {
             contentView.configuration = configuration
         } else {
@@ -458,10 +527,12 @@ private struct OverviewQuoteCard: View, Equatable {
     let instrument: Instrument
     let quote: Quote?
     let colorConvention: PriceColorConvention
+    let typeSize: DynamicTypeSize
 
     static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.instrument == rhs.instrument && lhs.quote?.price == rhs.quote?.price
             && lhs.quote?.changePercent == rhs.quote?.changePercent && lhs.colorConvention == rhs.colorConvention
+            && lhs.typeSize == rhs.typeSize
     }
 
     var body: some View {
@@ -529,7 +600,7 @@ private struct QuoteRow: View, Equatable {
                 if isWidget {
                     Image(systemName: "applewatch")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(.tint)
                         .accessibilityLabel("表盘关注")
                 }
             }
@@ -623,7 +694,7 @@ private struct OverviewManagementView: View {
                     Button {
                         ui.showingSearch = true
                     } label: {
-                        Label("添加指数或个股", systemImage: "plus")
+                        Label("添加证券", systemImage: "plus")
                             .frame(minHeight: 44)
                     }
                     .tint(store.settings.buttonTheme.color)
