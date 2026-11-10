@@ -9,7 +9,7 @@ struct InstrumentDetailView: View {
 
     var body: some View {
         let quote = store.quote(for: instrument)
-        let eastmoneyLink = eastmoneyURL
+        let eastmoneyLink = EastmoneyLink.stockPage(for: instrument)
         let status = QuoteStatus.evaluate(quote: quote, selectedSource: store.settings.marketDataSource,
                                           session: store.tradingSession, requestFailed: store.quoteFailures.contains(instrument.symbol))
         List {
@@ -89,7 +89,7 @@ struct InstrumentDetailView: View {
                 } header: {
                     Text("熄屏行情 · 已选 \(store.screenOffInstruments.count) 只")
                 } footer: {
-                    Text("按自选顺序在底部显示涨跌幅，每行最多 4 个，可多行显示。单击其他区域立即隐藏或再次显示行情；隐藏时暂停刷新，重新显示时立即更新。切后台保留页面，点击底部行情区域返回进入前的页面。")
+                    Text("按自选顺序在顶部安全区域内显示涨跌幅，每行最多 4 个，可多行显示。点击涨跌幅文本可打开东方财富；点击屏幕中央区域退出熄屏模式，其他区域隐藏或再次显示行情。隐藏时暂停刷新，重新显示时立即更新；切后台保留页面。")
                 }
             }
 
@@ -141,7 +141,19 @@ struct InstrumentDetailView: View {
         }
     }
 
-    private var eastmoneyURL: URL? {
+    private func change(_ text: String) -> some View {
+        Text(text)
+            .accessibilityLabel("涨跌额 \(text) 元")
+    }
+
+    private func percent(_ text: String) -> some View {
+        Text(text)
+            .accessibilityLabel("涨跌幅 \(text)")
+    }
+}
+
+enum EastmoneyLink {
+    static func stockPage(for instrument: Instrument) -> URL? {
         let market: String
         switch instrument.symbol.prefix(2) {
         case "sh": market = "1"
@@ -158,15 +170,5 @@ struct InstrumentDetailView: View {
             URLQueryItem(name: "market", value: market)
         ]
         return components.url
-    }
-
-    private func change(_ text: String) -> some View {
-        Text(text)
-            .accessibilityLabel("涨跌额 \(text) 元")
-    }
-
-    private func percent(_ text: String) -> some View {
-        Text(text)
-            .accessibilityLabel("涨跌幅 \(text)")
     }
 }

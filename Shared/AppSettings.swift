@@ -61,6 +61,56 @@ public enum MarketDataSource: String, Codable, CaseIterable, Sendable {
     }
 }
 
+/// Interface preferences belong to the app that owns them. They are kept out
+/// of the phone/Watch settings snapshot so changing one device never changes
+/// the other device's controls.
+public struct LocalAppearanceSettings: Codable, Equatable, Sendable {
+    public var appearance: AppAppearance
+    public var buttonTheme: ButtonTheme
+    public var fontSize: AppFontSize
+
+    public init(appearance: AppAppearance = .system,
+                buttonTheme: ButtonTheme = .teal,
+                fontSize: AppFontSize = .smaller) {
+        self.appearance = appearance
+        self.buttonTheme = buttonTheme
+        self.fontSize = fontSize
+    }
+}
+
+public enum AppearanceStorePlatform: String, Sendable {
+    case phone
+    case watch
+}
+
+public enum LocalAppearanceStore {
+    private static let keyPrefix = "xprice.localAppearance.v1."
+
+    private static func key(for platform: AppearanceStorePlatform) -> String {
+        keyPrefix + platform.rawValue
+    }
+
+    public static func load(for platform: AppearanceStorePlatform,
+                            from defaults: UserDefaults = .standard) -> LocalAppearanceSettings? {
+        guard let data = defaults.data(forKey: key(for: platform)) else { return nil }
+        return try? JSONDecoder().decode(LocalAppearanceSettings.self, from: data)
+    }
+
+    @discardableResult
+    public static func save(_ settings: LocalAppearanceSettings,
+                            for platform: AppearanceStorePlatform,
+                            to defaults: UserDefaults = .standard) -> Bool {
+        guard let data = try? JSONEncoder().encode(settings) else { return false }
+        defaults.set(data, forKey: key(for: platform))
+        return defaults.data(forKey: key(for: platform)) == data
+    }
+
+    public static func remove(for platform: AppearanceStorePlatform,
+                              from defaults: UserDefaults = .standard) {
+        defaults.removeObject(forKey: key(for: platform))
+    }
+}
+
 public struct AppSettings: Codable, Equatable, Sendable {
     public static let refreshOptions = [1, 3, 5, 10, 15]
     public var phoneRefreshSeconds: Int

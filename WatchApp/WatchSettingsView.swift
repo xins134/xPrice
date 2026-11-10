@@ -33,7 +33,7 @@ struct WatchSettingsView: View {
                 } header: {
                     Text("界面外观")
                 } footer: {
-                    Text("字体默认较小，调整后同步到 iPhone。按钮、开关等控件跟随主题色，涨跌颜色单独设置。")
+                    Text("字体默认较小。字体和主题色仅作用于 Apple Watch，不会同步到 iPhone。按钮、开关等控件跟随主题色，涨跌颜色单独设置。")
                 }
 
                 Section {

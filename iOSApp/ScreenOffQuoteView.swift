@@ -2,14 +2,34 @@ import SwiftUI
 import Combine
 import UIKit
 
+enum ScreenOffBrightnessSetting {
+    static let defaultsKey = "xprice.screenOffBrightnessPercent.v1"
+    static let defaultPercent = 10
+    static let quoteFontSizeKey = "xprice.screenOffQuoteFontSize.v1"
+    static let defaultQuoteFontSize = 13
+    static let quoteFontSizeRange = 8...36
+
+    static func percent(from defaults: UserDefaults = .standard) -> Int {
+        guard let value = defaults.object(forKey: defaultsKey) as? Int else { return defaultPercent }
+        return min(100, max(1, value))
+    }
+
+    static func brightness(from defaults: UserDefaults = .standard) -> CGFloat {
+        CGFloat(percent(from: defaults)) / 100
+    }
+}
+
 struct ScreenOffQuoteView: UIViewControllerRepresentable {
+    @AppStorage(ScreenOffBrightnessSetting.quoteFontSizeKey)
+    private var quoteFontSize = ScreenOffBrightnessSetting.defaultQuoteFontSize
     let store: AppStore
     var instrument: Instrument? = nil
     let onDismiss: () -> Void
 
     func makeUIViewController(context: Context) -> UIViewController {
         ScreenOffQuoteController(store: store, instrument: instrument,
-                                 typeSize: context.environment.dynamicTypeSize, onDismiss: onDismiss)
+                                 typeSize: context.environment.dynamicTypeSize,
+                                 quoteFontSize: CGFloat(quoteFontSize), onDismiss: onDismiss)
     }
 
     func updateUIViewController(_ controller: UIViewController, context: Context) {
@@ -18,6 +38,8 @@ struct ScreenOffQuoteView: UIViewControllerRepresentable {
         if controller.rootView.instrument != instrument { controller.rootView.instrument = instrument }
         let typeSize = context.environment.dynamicTypeSize
         if controller.rootView.typeSize != typeSize { controller.rootView.typeSize = typeSize }
+        let quoteFontSize = CGFloat(quoteFontSize)
+        if controller.rootView.quoteFontSize != quoteFontSize { controller.rootView.quoteFontSize = quoteFontSize }
     }
 
     static func dismantleUIViewController(_ controller: UIViewController, coordinator: ()) {
@@ -35,20 +57,24 @@ private struct ScreenOffQuoteContent: View {
     @ObservedObject var display: ScreenOffDisplayState
     var instrument: Instrument?
     var typeSize: DynamicTypeSize
+    var quoteFontSize: CGFloat
     var screenInsets = EdgeInsets()
     let onDismiss: () -> Void
 
     var body: some View {
         ScreenOffQuoteLayout(store: store, display: display, instrument: instrument,
-                             screenInsets: screenInsets, onDismiss: onDismiss)
+                             quoteFontSize: quoteFontSize, screenInsets: screenInsets, onDismiss: onDismiss)
             .dynamicTypeSize(typeSize)
     }
 }
 
 private struct ScreenOffQuoteLayout: View {
+    @Environment(\.openURL) private var openURL
+    @State private var isEastmoneyUnavailable = false
     @ObservedObject var store: AppStore
     @ObservedObject var display: ScreenOffDisplayState
     let instrument: Instrument?
+    let quoteFontSize: CGFloat
     let screenInsets: EdgeInsets
     let onDismiss: () -> Void
     @ScaledMetric(relativeTo: .subheadline) private var scaledRowHeight: CGFloat = 44
@@ -58,11 +84,11 @@ private struct ScreenOffQuoteLayout: View {
             let instruments = displayedInstruments
             let columnCount = min(4, max(1, instruments.count))
             let rowCount = max(1, (instruments.count + columnCount - 1) / columnCount)
-            let rowHeight = max(44, scaledRowHeight)
+            let rowHeight = max(max(44, scaledRowHeight), quoteFontSize * 1.5)
             let contentHeight = CGFloat(rowCount) * rowHeight
             let availableHeight = max(0, geometry.size.height - screenInsets.top - screenInsets.bottom)
 
-            ZStack(alignment: .bottom) {
+            ZStack(alignment: .top) {
                 Button(action: toggleQuotes) {
                     Color.black
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -77,16 +103,27 @@ private struct ScreenOffQuoteLayout: View {
                             let quote = store.quote(for: instrument)
                             let text = quote
                                 .map { QuoteFormatting.percent($0.changePercent) } ?? "—"
-                            Text(text)
-                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                                .monospacedDigit()
-                                .foregroundStyle(quote.map {
-                                    QuoteColor.color(for: $0.changePercent, convention: store.settings.colorConvention)
-                                } ?? .secondary)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.35)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: rowHeight)
+                            ZStack {
+                                Button {
+                                    guard let url = EastmoneyLink.stockPage(for: instrument) else { return }
+                                    openURL(url) { accepted in
+                                        isEastmoneyUnavailable = !accepted
+                                    }
+                                } label: {
+                                    Text(text)
+                                        .font(.system(size: quoteFontSize, weight: .semibold, design: .rounded))
+                                        .monospacedDigit()
+                                        .foregroundStyle(quote.map {
+                                            QuoteColor.color(for: $0.changePercent, convention: store.settings.colorConvention)
+                                        } ?? .secondary)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.35)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("\(instrument.name)，涨跌幅 \(text)，在东方财富查看")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: rowHeight)
                         }
                     }
                     .opacity(display.showsQuotes ? 1 : 0)
@@ -99,15 +136,27 @@ private struct ScreenOffQuoteLayout: View {
                 .frame(height: min(contentHeight, availableHeight))
                 .background(.black)
                 .contentShape(Rectangle())
-                .simultaneousGesture(TapGesture().onEnded { onDismiss() })
-                .accessibilityElement(children: .ignore)
-                .accessibilityAddTraits(.isButton)
-                .accessibilityLabel(dismissLabel)
-                .accessibilityValue(display.showsQuotes ? accessibleQuotes : "行情已隐藏")
-                .accessibilityAction(.default, onDismiss)
+                .allowsHitTesting(display.showsQuotes)
                 .padding(.leading, screenInsets.leading)
                 .padding(.trailing, screenInsets.trailing)
-                .padding(.bottom, screenInsets.bottom)
+                .padding(.top, screenInsets.top)
+
+                Button(action: onDismiss) {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .frame(width: 100, height: 100)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(dismissLabel)
+                .accessibilityHint("退出熄屏模式")
+                .frame(width: 100, height: 100)
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                .zIndex(1)
+            }
+            .alert("无法打开东方财富", isPresented: $isEastmoneyUnavailable) {
+                Button("好", role: .cancel) {}
+            } message: {
+                Text("请确认已安装东方财富 App，然后重试。")
             }
         }
         .ignoresSafeArea()
@@ -135,12 +184,6 @@ private struct ScreenOffQuoteLayout: View {
         }
     }
 
-    private var accessibleQuotes: String {
-        displayedInstruments.map { instrument in
-            let percent = store.quote(for: instrument).map { QuoteFormatting.percent($0.changePercent) } ?? "暂无报价"
-            return "\(instrument.name)，涨跌幅 \(percent)"
-        }.joined(separator: "；")
-    }
 }
 
 @MainActor
@@ -155,15 +198,18 @@ private final class ScreenOffQuoteController: UIHostingController<ScreenOffQuote
     private var displaySessionIsApplied = false
     private var isClosing = false
 
-    init(store: AppStore, instrument: Instrument?, typeSize: DynamicTypeSize, onDismiss: @escaping () -> Void) {
+    init(store: AppStore, instrument: Instrument?, typeSize: DynamicTypeSize,
+         quoteFontSize: CGFloat, onDismiss: @escaping () -> Void) {
         let display = ScreenOffDisplayState()
         self.store = store
         self.display = display
         self.onDismiss = onDismiss
         super.init(rootView: ScreenOffQuoteContent(store: store, display: display, instrument: instrument,
-                                                 typeSize: typeSize, onDismiss: onDismiss))
+                                                 typeSize: typeSize, quoteFontSize: quoteFontSize,
+                                                 onDismiss: onDismiss))
         rootView = ScreenOffQuoteContent(store: store, display: display, instrument: instrument,
-                                        typeSize: typeSize, onDismiss: { [weak self] in
+                                        typeSize: typeSize, quoteFontSize: quoteFontSize,
+                                        onDismiss: { [weak self] in
             self?.closeMode()
         })
     }
@@ -240,7 +286,8 @@ private final class ScreenOffQuoteController: UIHostingController<ScreenOffQuote
             ?? scene.screen.brightness
         originalIdleTimerDisabled = UIApplication.shared.isIdleTimerDisabled
         if let modeScreen {
-            ScreenBrightnessAnimator.shared.transition(to: 0.10, on: modeScreen, in: scene)
+            ScreenBrightnessAnimator.shared.transition(to: ScreenOffBrightnessSetting.brightness(),
+                                                       on: modeScreen, in: scene)
         }
         UIApplication.shared.isIdleTimerDisabled = true
         displaySessionIsApplied = true

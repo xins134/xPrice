@@ -58,7 +58,7 @@ struct WatchlistView: View {
             .alert("先选择熄屏行情", isPresented: $ui.showingScreenOffSetup) {
                 Button("好", role: .cancel) {}
             } message: {
-                Text("在自选详情中开启“显示在熄屏行情”，每行最多显示 4 个涨跌幅，超过后多行显示。点击底部行情区域返回首页，点击其他区域立即隐藏行情，再次点击重新显示；隐藏后仍可点击原底部区域返回。")
+                Text("在自选详情中开启“显示在熄屏行情”，每行最多显示 4 个涨跌幅，超过后多行显示。点击涨跌幅可打开东方财富，屏幕中央区域退出熄屏模式，其他区域隐藏或再次显示行情。")
             }
             .onOpenURL { url in
                 guard url.scheme == "xprice", url.host == "quote",

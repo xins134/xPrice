@@ -35,6 +35,10 @@ final class AppStore: ObservableObject {
     private var sourceRevision = UUID()
     private var lastWidgetReload = Date.distantPast
 
+    private var appearancePlatform: AppearanceStorePlatform {
+        platform == .phone ? .phone : .watch
+    }
+
     var refreshSeconds: Int { platform == .phone ? settings.phoneRefreshSeconds : settings.watchRefreshSeconds }
     var effectiveRefreshSeconds: Int {
         Int(tradingSession.autoRefreshDelay(interval: refreshSeconds, failures: failureCount,
@@ -66,6 +70,22 @@ final class AppStore: ObservableObject {
         watchlistUpdatedAt = cached?.watchlistUpdatedAt ?? .distantPast
         settingsUpdatedAt = cached?.settingsUpdatedAt ?? .distantPast
         settingsVersions = cached?.settingsVersions ?? SettingsVersions()
+        let localAppearancePlatform: AppearanceStorePlatform = platform == .phone ? .phone : .watch
+        if let localAppearance = LocalAppearanceStore.load(for: localAppearancePlatform) {
+            settings.phoneAppearance = localAppearance.appearance
+            settings.buttonTheme = localAppearance.buttonTheme
+            settings.fontSize = localAppearance.fontSize
+        } else {
+            // Migrate the shared fields once for existing installations. New
+            // writes remove these fields from the shared snapshot entirely.
+            _ = LocalAppearanceStore.save(
+                LocalAppearanceSettings(appearance: settings.phoneAppearance,
+                                        buttonTheme: settings.buttonTheme,
+                                        fontSize: settings.fontSize),
+                for: localAppearancePlatform
+            )
+        }
+        clearLocalAppearanceVersions()
         if platform == .phone {
             screenOffSelection = ScreenOffSelection.load(from: .standard, watchlist: watchlist)
             screenOffSelection.save(to: .standard)
@@ -257,11 +277,19 @@ final class AppStore: ObservableObject {
         update(&settings)
         settings.normalize()
         updateTradingSession()
-        settingsUpdatedAt = nextEditDate()
-        settingsVersions.recordChanges(from: oldSettings, to: settings, at: settingsUpdatedAt)
+        let localAppearanceChanged = hasLocalAppearanceChange(from: oldSettings, to: settings)
+        let sharedSettingsChanged = hasSharedSettingsChange(from: oldSettings, to: settings)
+        if localAppearanceChanged {
+            _ = LocalAppearanceStore.save(localAppearance, for: appearancePlatform)
+        }
+        if sharedSettingsChanged {
+            settingsUpdatedAt = nextEditDate()
+            settingsVersions.recordChanges(from: oldSettings, to: settings, at: settingsUpdatedAt)
+            clearLocalAppearanceVersions()
+        }
         let sourceChanged = oldSettings.marketDataSource != settings.marketDataSource
         if sourceChanged { invalidateSourceRequests() }
-        persist(sync: true, reloadWidget: true)
+        persist(sync: sharedSettingsChanged, reloadWidget: sharedSettingsChanged)
         if isActive, sourceChanged || previousInterval != refreshSeconds ||
             oldSettings.smartRefreshEnabled != settings.smartRefreshEnabled ||
             oldSettings.additionalClosedDates != settings.additionalClosedDates { restartLoop() }
@@ -357,6 +385,55 @@ final class AppStore: ObservableObject {
         tradingSession = TradingSchedule.session(at: .now, additionalClosedDates: settings.additionalClosedDates)
     }
 
+    private var localAppearance: LocalAppearanceSettings {
+        LocalAppearanceSettings(appearance: settings.phoneAppearance,
+                                buttonTheme: settings.buttonTheme,
+                                fontSize: settings.fontSize)
+    }
+
+    private func clearLocalAppearanceVersions() {
+        settingsVersions.phoneAppearance = .distantPast
+        settingsVersions.buttonTheme = .distantPast
+        settingsVersions.fontSize = .distantPast
+    }
+
+    private func hasLocalAppearanceChange(from old: AppSettings, to new: AppSettings) -> Bool {
+        old.phoneAppearance != new.phoneAppearance ||
+            old.buttonTheme != new.buttonTheme ||
+            old.fontSize != new.fontSize
+    }
+
+    private func hasSharedSettingsChange(from old: AppSettings, to new: AppSettings) -> Bool {
+        old.phoneRefreshSeconds != new.phoneRefreshSeconds ||
+            old.watchRefreshSeconds != new.watchRefreshSeconds ||
+            old.colorConvention != new.colorConvention ||
+            old.widgetSymbol != new.widgetSymbol ||
+            old.marketDataSource != new.marketDataSource ||
+            old.smartRefreshEnabled != new.smartRefreshEnabled ||
+            old.additionalClosedDates != new.additionalClosedDates
+    }
+
+    private func sharedSnapshot(from source: CacheSnapshot) -> CacheSnapshot {
+        var result = source
+        result.settings.phoneAppearance = .system
+        result.settings.buttonTheme = .teal
+        result.settings.fontSize = .smaller
+        result.settingsVersions.phoneAppearance = .distantPast
+        result.settingsVersions.buttonTheme = .distantPast
+        result.settingsVersions.fontSize = .distantPast
+        return result
+    }
+
+    private func incomingSnapshot(_ incoming: CacheSnapshot) -> CacheSnapshot {
+        var result = incoming
+        // Older peers still send these fields. Ignore them as well as their
+        // versions so they can never overwrite this app's local preferences.
+        result.settingsVersions.phoneAppearance = .distantPast
+        result.settingsVersions.buttonTheme = .distantPast
+        result.settingsVersions.fontSize = .distantPast
+        return result
+    }
+
     private var snapshot: CacheSnapshot {
         CacheSnapshot(watchlist: watchlist, quotes: quotes, settings: settings,
                       modifiedAt: max(watchlistUpdatedAt, settingsUpdatedAt),
@@ -366,7 +443,7 @@ final class AppStore: ObservableObject {
 
     @discardableResult
     private func persist(sync shouldSync: Bool = false, reloadWidget: Bool = false) -> Bool {
-        guard SnapshotStore.saveConfirmed(snapshot) else {
+        guard SnapshotStore.saveConfirmed(sharedSnapshot(from: snapshot)) else {
             errorMessage = "本机保存失败，请重试"
             return false
         }
@@ -376,7 +453,7 @@ final class AppStore: ObservableObject {
     }
 
     private func sync(force: Bool = false) {
-        var synced = snapshot
+        var synced = sharedSnapshot(from: snapshot)
         synced.overviewInstruments = []
         let watchlistSymbols = Set(watchlist.map(\.symbol))
         synced.quotes = synced.quotes.filter { watchlistSymbols.contains($0.key) }
@@ -393,7 +470,7 @@ final class AppStore: ObservableObject {
         guard platform == .phone else { throw WatchlistBackupError.invalidFormat }
         let oldSource = settings.marketDataSource
         let result = try backup.apply(to: snapshot, mode: mode, includeSettings: includeSettings, date: nextEditDate())
-        guard SnapshotStore.saveConfirmed(result) else {
+        guard SnapshotStore.saveConfirmed(sharedSnapshot(from: result)) else {
             throw CocoaError(.fileWriteUnknown)
         }
         watchlist = result.watchlist
@@ -405,6 +482,10 @@ final class AppStore: ObservableObject {
         watchlistUpdatedAt = result.watchlistUpdatedAt
         settingsUpdatedAt = result.settingsUpdatedAt
         settingsVersions = result.settingsVersions
+        clearLocalAppearanceVersions()
+        if includeSettings {
+            _ = LocalAppearanceStore.save(localAppearance, for: appearancePlatform)
+        }
         if oldSource != settings.marketDataSource { invalidateSourceRequests() }
         quoteFailures = quoteFailures.intersection(Set(quoteInstruments.map(\.symbol)))
         errorMessage = nil
@@ -434,7 +515,9 @@ final class AppStore: ObservableObject {
             watchlist = incoming.watchlist.filter { seen.insert($0.symbol).inserted }.prefix(50).map { $0 }
             watchlistUpdatedAt = incoming.watchlistUpdatedAt
         }
-        settingsVersions.merge(local: &settings, incoming: incoming.settings, versions: incoming.settingsVersions)
+        let sanitizedIncoming = incomingSnapshot(incoming)
+        settingsVersions.merge(local: &settings, incoming: sanitizedIncoming.settings,
+                               versions: sanitizedIncoming.settingsVersions)
         updateTradingSession()
         let sourceChanged = oldSource != settings.marketDataSource
         if sourceChanged { invalidateSourceRequests() }

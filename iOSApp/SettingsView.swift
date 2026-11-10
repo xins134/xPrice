@@ -3,6 +3,10 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+    @AppStorage(ScreenOffBrightnessSetting.defaultsKey)
+    private var screenOffBrightnessPercent = ScreenOffBrightnessSetting.defaultPercent
+    @AppStorage(ScreenOffBrightnessSetting.quoteFontSizeKey)
+    private var screenOffQuoteFontSize = ScreenOffBrightnessSetting.defaultQuoteFontSize
 
     var body: some View {
         NavigationStack {
@@ -26,7 +30,7 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.navigationLink)
-                    .accessibilityHint("较小为默认字号，选择后立即生效并同步到手表")
+                    .accessibilityHint("较小为默认字号，选择后立即生效，仅作用于 iPhone")
 
                     Picker("主题色", selection: Binding(
                         get: { store.settings.buttonTheme },
@@ -47,7 +51,41 @@ struct SettingsView: View {
                 } header: {
                     Text("界面外观")
                 } footer: {
-                    Text("跟随系统会随 iPhone 的外观自动切换。选择立即生效，并保留到下次打开 App。\n字体默认较小，调整后同步到手表。按钮、开关等控件跟随主题色，涨跌颜色单独设置。")
+                    Text("跟随系统会随 iPhone 的外观自动切换。选择立即生效，并保留到下次打开 App。字体、主题色和外观模式仅作用于 iPhone，不会同步到手表。按钮、开关等控件跟随主题色，涨跌颜色单独设置。")
+                }
+
+                Section {
+                    HStack(spacing: 12) {
+                        Text("进入后亮度")
+                        Slider(value: Binding(
+                            get: { Double(screenOffBrightnessPercent) },
+                            set: { screenOffBrightnessPercent = Int($0.rounded()) }
+                        ), in: 1...100, step: 1)
+                        .accessibilityLabel("熄屏模式亮度")
+                        .accessibilityValue("\(screenOffBrightnessPercent)%")
+                        Text("\(screenOffBrightnessPercent)%")
+                            .monospacedDigit()
+                            .frame(width: 42, alignment: .trailing)
+                    }
+                    .tint(store.settings.buttonTheme.color)
+
+                    HStack(spacing: 12) {
+                        Text("涨跌幅字号")
+                        Slider(value: Binding(
+                            get: { Double(screenOffQuoteFontSize) },
+                            set: { screenOffQuoteFontSize = Int($0.rounded()) }
+                        ), in: Double(ScreenOffBrightnessSetting.quoteFontSizeRange.lowerBound)...Double(ScreenOffBrightnessSetting.quoteFontSizeRange.upperBound), step: 1)
+                        .accessibilityLabel("熄屏模式涨跌幅字号")
+                        .accessibilityValue("\(screenOffQuoteFontSize) pt")
+                        Text("\(screenOffQuoteFontSize) pt")
+                            .monospacedDigit()
+                            .frame(width: 48, alignment: .trailing)
+                    }
+                    .tint(store.settings.buttonTheme.color)
+                } header: {
+                    Text("熄屏模式")
+                } footer: {
+                    Text("亮度范围 1%–100%，默认 10%；字号范围 12–36 pt，默认 16 pt。设置保存在本机并即时生效。进入熄屏模式后渐变至设定亮度；退出或切到后台时恢复原亮度。")
                 }
 
                 Section {

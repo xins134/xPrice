@@ -486,3 +486,30 @@ struct StorePolicyTests {
         try body(defaults)
     }
 }
+
+struct LocalAppearanceStoreTests {
+    @Test func phoneAndWatchAppearanceValuesUseSeparateLocalKeys() throws {
+        let suite = "xprice.localAppearance.tests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+
+        let phone = LocalAppearanceSettings(appearance: .dark, buttonTheme: .purple, fontSize: .large)
+        let watch = LocalAppearanceSettings(appearance: .system, buttonTheme: .orange, fontSize: .small)
+        #expect(LocalAppearanceStore.save(phone, for: .phone, to: defaults))
+        #expect(LocalAppearanceStore.save(watch, for: .watch, to: defaults))
+        #expect(LocalAppearanceStore.load(for: .phone, from: defaults) == phone)
+        #expect(LocalAppearanceStore.load(for: .watch, from: defaults) == watch)
+
+        LocalAppearanceStore.remove(for: .phone, from: defaults)
+        #expect(LocalAppearanceStore.load(for: .phone, from: defaults) == nil)
+        #expect(LocalAppearanceStore.load(for: .watch, from: defaults) == watch)
+    }
+
+    @Test func malformedLocalAppearanceDoesNotProduceAStalePreference() throws {
+        let suite = "xprice.localAppearance.malformed.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(Data("not-json".utf8), forKey: "xprice.localAppearance.v1.phone")
+        #expect(LocalAppearanceStore.load(for: .phone, from: defaults) == nil)
+    }
+}
