@@ -23,6 +23,7 @@ final class AppStore: ObservableObject {
     private let platform: Platform
     private let injectedProvider: (any MarketDataProviding)?
     private var bridge: WatchSyncBridge?
+    // Both phone-managed instrument lists share one version for synchronization.
     private var watchlistUpdatedAt: Date
     private var settingsUpdatedAt: Date
     private var settingsVersions: SettingsVersions
@@ -64,7 +65,7 @@ final class AppStore: ObservableObject {
         self.injectedProvider = provider
         let cached = SnapshotStore.load()
         watchlist = cached?.watchlist ?? []
-        overviewInstruments = platform == .phone ? cached?.overviewInstruments ?? [] : []
+        overviewInstruments = cached?.overviewInstruments ?? []
         quotes = cached?.quotes ?? [:]
         settings = cached?.settings ?? AppSettings()
         watchlistUpdatedAt = cached?.watchlistUpdatedAt ?? .distantPast
@@ -220,19 +221,22 @@ final class AppStore: ObservableObject {
               !overviewInstruments.contains(where: { $0.symbol == instrument.symbol }) else { return false }
         guard overviewInstruments.count < 50 else { errorMessage = "行情栏最多添加 50 只证券"; return false }
         overviewInstruments.append(instrument)
-        persist()
+        watchlistUpdatedAt = nextEditDate()
+        persist(sync: true)
         if isActive { restartLoop() }
         return true
     }
 
     func removeFromOverview(_ instrument: Instrument) {
-        guard platform == .phone else { return }
+        guard platform == .phone,
+              overviewInstruments.contains(where: { $0.symbol == instrument.symbol }) else { return }
         overviewInstruments.removeAll { $0.symbol == instrument.symbol }
         if !watchlist.contains(where: { $0.symbol == instrument.symbol }) {
             quotes.removeValue(forKey: instrument.symbol)
         }
         if quoteInstruments.isEmpty { errorMessage = nil }
-        persist()
+        watchlistUpdatedAt = nextEditDate()
+        persist(sync: true)
     }
 
     func moveOverview(from offsets: IndexSet, to destination: Int) {
@@ -243,7 +247,8 @@ final class AppStore: ObservableObject {
         let adjusted = destination - validOffsets.filter { $0 < destination }.count
         for index in validOffsets.sorted(by: >) { overviewInstruments.remove(at: index) }
         overviewInstruments.insert(contentsOf: moving, at: max(0, min(adjusted, overviewInstruments.count)))
-        persist()
+        watchlistUpdatedAt = nextEditDate()
+        persist(sync: true)
     }
 
     func moveOverview(_ instrument: Instrument, by distance: Int) {
@@ -453,11 +458,7 @@ final class AppStore: ObservableObject {
     }
 
     private func sync(force: Bool = false) {
-        var synced = sharedSnapshot(from: snapshot)
-        synced.overviewInstruments = []
-        let watchlistSymbols = Set(watchlist.map(\.symbol))
-        synced.quotes = synced.quotes.filter { watchlistSymbols.contains($0.key) }
-        bridge?.send(synced, force: force)
+        bridge?.send(sharedSnapshot(from: snapshot), force: force)
     }
 
     func retrySync() { sync(force: true) }
@@ -510,9 +511,13 @@ final class AppStore: ObservableObject {
         let oldSettings = settings
         let oldSource = settings.marketDataSource
         let oldSymbols = watchlist.map(\.symbol)
+        let oldOverviewSymbols = overviewInstruments.map(\.symbol)
         if platform == .watch, incoming.watchlistUpdatedAt >= watchlistUpdatedAt {
             var seen = Set<String>()
             watchlist = incoming.watchlist.filter { seen.insert($0.symbol).inserted }.prefix(50).map { $0 }
+            var overviewSymbols = Set<String>()
+            overviewInstruments = incoming.overviewInstruments
+                .filter { overviewSymbols.insert($0.symbol).inserted }.prefix(50).map { $0 }
             watchlistUpdatedAt = incoming.watchlistUpdatedAt
         }
         let sanitizedIncoming = incomingSnapshot(incoming)
@@ -537,6 +542,7 @@ final class AppStore: ObservableObject {
         guard persist(reloadWidget: true) else { return nil }
         syncStatus = "收到的数据已保存"
         if isActive, sourceChanged || oldInterval != refreshSeconds || oldSymbols != watchlist.map(\.symbol) ||
+            oldOverviewSymbols != overviewInstruments.map(\.symbol) ||
             oldSettings.smartRefreshEnabled != settings.smartRefreshEnabled ||
             oldSettings.additionalClosedDates != settings.additionalClosedDates { restartLoop() }
         return snapshot

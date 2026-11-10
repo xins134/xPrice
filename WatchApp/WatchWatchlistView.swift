@@ -29,11 +29,14 @@ struct WatchWatchlistView: View {
     @EnvironmentObject private var store: AppStore
     @StateObject private var navigation = WatchNavigationState()
     @ScaledMetric(relativeTo: .headline) private var quoteCardHeight: CGFloat = 92
+    @ScaledMetric(relativeTo: .caption2) private var overviewCardHeight: CGFloat = 60
 
     var body: some View {
         NavigationStack(path: $navigation.navigationPath) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
+                    marketOverview
+
                     header
 
                     if store.watchlist.isEmpty {
@@ -61,7 +64,9 @@ struct WatchWatchlistView: View {
                                 .accessibilityIdentifier("watch.quote.\(instrument.symbol)")
                             }
                         }
+                    }
 
+                    if !store.watchlist.isEmpty || !store.overviewInstruments.isEmpty {
                         WatchRefreshStatus()
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -100,13 +105,14 @@ struct WatchWatchlistView: View {
                 WatchSettingsView()
             }
             .navigationDestination(for: String.self) { symbol in
-                if let instrument = store.watchlist.first(where: { $0.symbol == symbol }) {
+                if let instrument = (store.watchlist + store.overviewInstruments)
+                    .first(where: { $0.symbol == symbol }) {
                     WatchQuoteDetailView(instrument: instrument)
                 } else {
                     ContentUnavailableView(
-                        "暂未找到这只自选",
+                        "暂未找到这只证券",
                         systemImage: "star",
-                        description: Text("请在 iPhone 打开 xPrice，同步自选列表后重试。")
+                        description: Text("请在 iPhone 打开 xPrice，同步列表后重试。")
                     )
                     .toolbarVisibility(.visible, for: .navigationBar)
                 }
@@ -127,6 +133,61 @@ struct WatchWatchlistView: View {
             }
         }
         .environment(\.colorScheme, .dark)
+    }
+
+    private var marketOverview: some View {
+        VStack(alignment: .leading, spacing: WatchHomeStyle.spacing) {
+            Text("行情概览")
+                .font(.headline.weight(.regular))
+                .accessibilityAddTraits(.isHeader)
+
+            if store.overviewInstruments.isEmpty {
+                Text("在 iPhone 的行情概览中添加证券，同步后显示。")
+                    .font(.caption2)
+                    .foregroundStyle(WatchHomeStyle.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(12)
+                    .background(WatchHomeStyle.card, in: RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius))
+            } else {
+                ScrollView(.horizontal) {
+                    LazyHStack(spacing: 0) {
+                        ForEach(Array(stride(from: 0, to: store.overviewInstruments.count, by: 3)), id: \.self) { start in
+                            HStack(spacing: WatchHomeStyle.spacing) {
+                                ForEach(0..<3) { offset in
+                                    let index = start + offset
+                                    if index < store.overviewInstruments.count {
+                                        let instrument = store.overviewInstruments[index]
+                                        NavigationLink(value: instrument.symbol) {
+                                            WatchOverviewQuoteCard(
+                                                instrument: instrument,
+                                                quote: store.quote(for: instrument),
+                                                colorConvention: store.settings.colorConvention,
+                                                height: overviewCardHeight
+                                            )
+                                            .equatable()
+                                        }
+                                        .buttonStyle(WatchHomeButtonStyle())
+                                        .frame(minWidth: 0, maxWidth: .infinity)
+                                        .accessibilityIdentifier("watch.overview.\(instrument.symbol)")
+                                    } else {
+                                        Color.clear
+                                            .frame(minWidth: 0, maxWidth: .infinity)
+                                            .accessibilityHidden(true)
+                                    }
+                                }
+                            }
+                            .containerRelativeFrame(.horizontal)
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollTargetBehavior(.paging)
+                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+                .scrollIndicators(.hidden)
+                .frame(height: overviewCardHeight)
+                .accessibilityIdentifier("watch.overview")
+            }
+        }
     }
 
     private var header: some View {
@@ -207,9 +268,55 @@ struct WatchWatchlistView: View {
             .contentShape(Circle())
         }
         .buttonStyle(WatchHomeButtonStyle())
-        .disabled(store.isRefreshing || store.watchlist.isEmpty)
+        .disabled(store.isRefreshing || (store.watchlist.isEmpty && store.overviewInstruments.isEmpty))
         .accessibilityLabel(store.isRefreshing ? "正在刷新" : "刷新行情")
         .accessibilityIdentifier("watch.refresh")
+    }
+}
+
+private struct WatchOverviewQuoteCard: View, Equatable {
+    let instrument: Instrument
+    let quote: Quote?
+    let colorConvention: PriceColorConvention
+    let height: CGFloat
+
+    var body: some View {
+        GeometryReader { geometry in
+            let textWidth = max(0, geometry.size.width - 8)
+            let centerX = geometry.size.width / 2
+
+            Text(instrument.name)
+                .font(.caption2.weight(.regular))
+                .lineLimit(1)
+                .minimumScaleFactor(0.35)
+                .frame(width: textWidth, height: geometry.size.height / 3)
+                .position(x: centerX, y: geometry.size.height / 3)
+
+            Text(quote.map { QuoteFormatting.percent($0.changePercent) } ?? "—")
+                .font(.system(.caption2, design: .rounded, weight: .regular))
+                .monospacedDigit()
+                .foregroundStyle(changeColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.35)
+                .frame(width: textWidth, height: geometry.size.height / 3)
+                .position(x: centerX, y: geometry.size.height * 2 / 3)
+        }
+        .multilineTextAlignment(.center)
+        .frame(height: height)
+        .background(WatchHomeStyle.card, in: RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius))
+        .overlay {
+            RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius)
+                .strokeBorder(WatchHomeStyle.border, lineWidth: 1)
+        }
+        .contentShape(RoundedRectangle(cornerRadius: WatchHomeStyle.cornerRadius))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(instrument.name)，涨跌幅 \(quote.map { QuoteFormatting.percent($0.changePercent) } ?? "暂无涨跌幅")")
+    }
+
+    private var changeColor: Color {
+        guard let quote, quote.changePercent != 0 else { return WatchHomeStyle.secondary }
+        let isRed = (quote.changePercent > 0) == (colorConvention == .redUp)
+        return isRed ? WatchHomeStyle.quoteRed : WatchHomeStyle.quoteGreen
     }
 }
 
@@ -360,16 +467,18 @@ struct WatchQuoteDetailView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Button {
-                    store.selectWidgetSymbol(instrument.symbol)
-                } label: {
-                    Label(
-                        store.settings.widgetSymbol == instrument.symbol ? "已设为表盘股票" : "在表盘显示",
-                        systemImage: store.settings.widgetSymbol == instrument.symbol ? "checkmark" : "clock"
-                    )
+                if store.watchlist.contains(where: { $0.symbol == instrument.symbol }) {
+                    Button {
+                        store.selectWidgetSymbol(instrument.symbol)
+                    } label: {
+                        Label(
+                            store.settings.widgetSymbol == instrument.symbol ? "已设为表盘股票" : "在表盘显示",
+                            systemImage: store.settings.widgetSymbol == instrument.symbol ? "checkmark" : "clock"
+                        )
+                    }
+                    .tint(store.settings.buttonTheme.color)
+                    .disabled(store.settings.widgetSymbol == instrument.symbol)
                 }
-                .tint(store.settings.buttonTheme.color)
-                .disabled(store.settings.widgetSymbol == instrument.symbol)
 
                 Button {
                     Task { await store.refresh() }
